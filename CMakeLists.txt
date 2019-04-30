@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
-project(SO-18-19)
+project(SO_1819 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(main main.c)
+add_executable(SO_1819 main.c ma.c ma.h)

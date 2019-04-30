@@ -1,5 +1,3 @@
-#include "ma.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,76 +7,150 @@
 #define BUFFER_PATH 20
 #define BUFFER_SIZE 1000
 
+/*Retorna o numero de linhas no ficheiro*/
+int getLines(int fd) {
+    int counter=0;
+    char buffer;
+    while(read(fd, &buffer, 1)!=0) 
+        if(buffer == '\n') counter++;
+    return counter;
+}
+
+/* Não usado mas poderá dar jeito no futuro */
+int gotoLines(int fd,int line) {
+    int counter=0;
+    char buffer;
+    while(read(fd, &buffer, 1)!=0) 
+        if(buffer == '\n'){
+            counter++;
+            if(counter == line) return fd;
+        }
+    write(1, "Linha não existente!\n", 30);
+    return -1;
+}
+
 int addString(char input[BUFFER_SIZE],int preco){
-    int fPtr, fPtrArt,count=0;
+    
+    int fPtr, fPtrArt;
     char path[BUFFER_PATH] = "Strings.txt";
     char buffer[BUFFER_SIZE];
+
     /*Abre os ficheiros necessarios*/
     fPtr  = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+
     /*Arranja o primeiro byte do artigo e o seu tamanho*/
     int pos = lseek(fPtr, -1, SEEK_END) + 1;
     int size = strlen(input);
+    
     /*Escreve os dados necessários nos ficheiros */
     write(fPtr, input, strlen(input));
-    sprintf(buffer, "%d %d %d\n", pos, size, preco);
+    sprintf(buffer, "%d %d %d\n", pos, size, preco); 
     write(fPtrArt, buffer, strlen(buffer));
-/*WIP
-    char c;
-    for (c = getc(fPtrArt); c != EOF; c = getc(fPtrArt))
-        if (c == '\n') // Increment count if this character is newline
-            count = count + 1;
-    printf("Codigo = %d\n",count);
+    
+    /*Encontra o codigo para dar ao artigo (linha do artigos.txt)*/
+    lseek(fPtrArt, 0, SEEK_SET);
+    int lines = getLines(fPtrArt);
+    sprintf(buffer, "Artigo criado com sucesso! Codigo = %d\n",lines);
+    write(1, buffer, strlen(buffer));
 
-    //write(1, "Impossivel aceder ao ficheiro\n", 30);
-*/
+    /*Fecha os ficheiros*/
     close(fPtr);
     close(fPtrArt);
+
     return 0;
 }
 
+int mudaNome(int codigo, char input[BUFFER_SIZE]){
+    int fPtr, fPtrArt,fptrTemp,i=1,k=0;
+    char path[BUFFER_PATH] = "Strings.txt",c;
+    char tempLine[20],newLine[20];
+    int temPos,tempsize,preco;
 
-int atualizaLinhaArtigos(int line,int size, int pos){
-    //Pointers
-    FILE * fPtr;
-    FILE * fTemp;
-    char path[100] = "artigo.txt";
-    char buffer[BUFFER_SIZE];
-    char input[BUFFER_SIZE];
-    int  count;
+    /*Abre os ficheiros necessarios*/
+    fPtr  = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+    fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+    fptrTemp = open("temp.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
 
-    sprintf(input, "%d %d", pos, size);
-    //Remove o \n do stdin
-    fflush(stdin);
-    fgets(input, BUFFER_SIZE, stdin);
+    /*Arranja o primeiro byte do artigo e o seu tamanho*/
+    int pos = lseek(fPtr, -1, SEEK_END) + 1;
+    int size = strlen(input);
+    write(fPtr, input, strlen(input));
 
-    //Parse do input
-    //Abre os ficheiros necessarios
-    fPtr  = fopen(path, "r");
-    fTemp = fopen("replace.tmp", "w");
-
-
-    if (fPtr == NULL || fTemp == NULL){
-        write(1, "Impossivel aceder ao ficheiro\n", 30);
-        exit(EXIT_SUCCESS);
+    /*Copia tudo o que está anterior á linha desejada para outro ficheiro e a linha desejada para uma variavel */
+    while(read(fPtrArt, &c, 1)!=0 && codigo >=i){
+        if(i!=codigo) write(fptrTemp, &c, 1);
+        else tempLine[k++] = c;
+        if(c == '\n') i++;
     }
+    tempLine[k-1] = '\0';
 
-    count = 0;
-    while ((fgets(buffer, BUFFER_SIZE, fPtr)) != NULL){
-        count++;
-        if (count == line)
-            fputs(input, fTemp);
-        else
-            fputs(buffer, fTemp);
+    /* Substitui os dados necessarios para a mudança de nome */
+    sscanf(tempLine, "%d %d %d", &temPos, &tempsize, &preco);
+    sprintf(newLine, "%d %d %d\n", pos, size, preco); 
+    write(fptrTemp, newLine, strlen(newLine));
+
+    /*Retrocede um byte e copia o resto do ficheiro antigo para o novo ficheiro */
+    lseek(fPtrArt,-1,SEEK_CUR);
+    while(read(fPtrArt, &c, 1)!=0) write(fptrTemp, &c, 1);
+    
+    /*Limpa tudo*/
+    close(fPtr);
+    close(fptrTemp);
+    close(fPtrArt);
+    remove("Artigos.txt");
+    rename("temp.txt", "Artigos.txt");
+    
+    write(1, "Nome mudado com Sucesso\n", 25);
+    return 0;
+
+}
+
+int mudaPreco(int codigo, int preco){
+    int fPtrArt,fptrTemp,i=1,k=0;
+    char c;
+    char tempLine[20],newLine[20];
+    int pos,size,tempreco;
+
+    /*Abre os ficheiros necessarios*/
+    fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+    fptrTemp = open("temp.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+
+    /*Copia tudo o que está anterior á linha desejada para outro ficheiro e a linha desejada para uma variavel */
+    while(read(fPtrArt, &c, 1)!=0 && codigo >=i){
+        if(i!=codigo) write(fptrTemp, &c, 1);
+        else tempLine[k++] = c;
+        if(c == '\n') i++;
     }
-    fclose(fPtr);
-    fclose(fTemp);
+    tempLine[k-1] = '\0';
 
-    remove(path);
+    /* Substitui os dados necessarios para a mudança de nome */
+    sscanf(tempLine, "%d %d %d", &pos, &size, &tempreco);
+    sprintf(newLine, "%d %d %d\n", pos, size, preco); 
+    write(fptrTemp, newLine, strlen(newLine));
 
-    rename("replace.tmp", path);
+    /*Retrocede um byte e copia o resto do ficheiro antigo para o novo ficheiro */
+    lseek(fPtrArt,-1,SEEK_CUR);
+    while(read(fPtrArt, &c, 1)!=0) write(fptrTemp, &c, 1);
+    
+    /*Limpa tudo*/
+    close(fptrTemp);
+    close(fPtrArt);
+    remove("Artigos.txt");
+    rename("temp.txt", "Artigos.txt");
+    
+    write(1, "Preco mudado com Sucesso\n", 26);
+    return 0;
 
-    write(1, "Sucesso\n", 10);
+}
 
+int main(){
+    addString("Bola",10);
+    addString("Caneta",10);
+    addString("Foice",10);
+    addString("Raquete",10);
+    addString("Violoncelo",10);
+    mudaNome(2,"Peido");
+    mudaPreco(3,500);
     return 0;
 }

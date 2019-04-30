@@ -1,31 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
 
+#define BUFFER_PATH 20
 #define BUFFER_SIZE 1000
 
 
 
 int addString(char input[BUFFER_SIZE]){
-    FILE * fPtr;
-    char path[100] = "Strings.txt";
+    int fPtr;
+    char path[BUFFER_PATH] = "Strings.txt";
     char buffer[BUFFER_SIZE];
 
-    fPtr  = fopen(path, "a");
+    
+    
+    fPtr  = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
 
-    fputs(input, fPtr);
+    int pos = lseek(fPtr, -1, SEEK_END);
+    int size = strlen(input);
+    
+    printf("%i\n",pos);
+    
+    write(fPtr, input, strlen(input));
 
-    fclose(fPtr);
+    close(fPtr);
 
     return 0;
 }
 
 
-int atualizaLinhaArtigo(int line)
+int atualizaLinhaArtigos(int line,int size, int pos)
 {
     //Pointers
     FILE * fPtr;
     FILE * fTemp;
-    char path[100] = "teste.txt";
+    char path[100] = "artigo.txt";
     
     char buffer[BUFFER_SIZE];
     char input[BUFFER_SIZE];
@@ -34,7 +45,6 @@ int atualizaLinhaArtigo(int line)
     //Remove o \n do stdin
     fflush(stdin);
 
-    write(1, "Input aqui\n", 10);
     fgets(input, BUFFER_SIZE, stdin);
 
     //Parse do input
@@ -89,5 +99,7 @@ int main(){
     addString("Bola");
     addString("Caneta");
     addString("Foice");
+    addString("Raquete");
+    addString("Violoncelo");
     return 0;
 }

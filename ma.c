@@ -8,9 +8,10 @@
 #define BUFFER_SIZE 1000
 
 /*Retorna o numero de linhas no ficheiro*/
-int getLines(int fd) {
+int getLines(char path[BUFFER_PATH]) {
     int counter=0;
     char buffer;
+    int fd = open(path,O_RDONLY);
     while(read(fd, &buffer, 1)!=0) 
         if(buffer == '\n') counter++;
     return counter;
@@ -50,7 +51,7 @@ int addString(char input[BUFFER_SIZE],int preco){
     
     /*Encontra o codigo para dar ao artigo (linha do artigos.txt)*/
     lseek(fPtrArt, 0, SEEK_SET);
-    int lines = getLines(fPtrArt);
+    int lines = getLines("Artigos.txt");
     sprintf(buffer, "Artigo criado com sucesso! Codigo = %d\n",lines);
     write(1, buffer, strlen(buffer));
 
@@ -67,6 +68,11 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
     char tempLine[20],newLine[20];
     int temPos,tempsize,preco;
 
+    if(codigo > getLines("Artigos.txt")){
+        write(1,"Codigo invalido!\n",18);
+        return -1;
+    }
+    
     /*Abre os ficheiros necessarios*/
     fPtr  = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
@@ -112,6 +118,12 @@ int mudaPreco(int codigo, int preco){
     char tempLine[20],newLine[20];
     int pos,size,tempreco;
 
+
+    if(codigo > getLines("Artigos.txt")){
+        write(1,"Codigo invalido!\n",18);
+        return -1;
+    }
+
     /*Abre os ficheiros necessarios*/
     fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     fptrTemp = open("temp.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
@@ -151,6 +163,6 @@ int main(){
     addString("Raquete",10);
     addString("Violoncelo",10);
     mudaNome(2,"Peido");
-    mudaPreco(3,500);
+    mudaPreco(2,500);
     return 0;
 }

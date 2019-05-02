@@ -12,7 +12,7 @@ int getLines(char path[BUFFER_PATH]) {
     int counter=0;
     char buffer;
     int fd = open(path,O_RDONLY);
-    while(read(fd, &buffer, 1)!=0) 
+    while(read(fd, &buffer, 1)!=0)
         if(buffer == '\n') counter++;
     return counter;
 }
@@ -21,7 +21,7 @@ int getLines(char path[BUFFER_PATH]) {
 int gotoLines(int fd,int line) {
     int counter=0;
     char buffer;
-    while(read(fd, &buffer, 1)!=0) 
+    while(read(fd, &buffer, 1)!=0)
         if(buffer == '\n'){
             counter++;
             if(counter == line) return fd;
@@ -31,7 +31,7 @@ int gotoLines(int fd,int line) {
 }
 
 int addString(char input[BUFFER_SIZE],int preco){
-    
+
     int fPtr, fPtrArt;
     char path[BUFFER_PATH] = "Strings.txt";
     char buffer[BUFFER_SIZE];
@@ -43,12 +43,12 @@ int addString(char input[BUFFER_SIZE],int preco){
     /*Arranja o primeiro byte do artigo e o seu tamanho*/
     int pos = lseek(fPtr, -1, SEEK_END) + 1;
     int size = strlen(input);
-    
+
     /*Escreve os dados necessários nos ficheiros */
     write(fPtr, input, strlen(input));
-    sprintf(buffer, "%d %d %d\n", pos, size, preco); 
+    sprintf(buffer, "%d %d %d\n", pos, size, preco);
     write(fPtrArt, buffer, strlen(buffer));
-    
+
     /*Encontra o codigo para dar ao artigo (linha do artigos.txt)*/
     lseek(fPtrArt, 0, SEEK_SET);
     int lines = getLines("Artigos.txt");
@@ -72,7 +72,7 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
         write(1,"Codigo invalido!\n",18);
         return -1;
     }
-    
+
     /*Abre os ficheiros necessarios*/
     fPtr  = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
@@ -93,20 +93,20 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
 
     /* Substitui os dados necessarios para a mudança de nome */
     sscanf(tempLine, "%d %d %d", &temPos, &tempsize, &preco);
-    sprintf(newLine, "%d %d %d\n", pos, size, preco); 
+    sprintf(newLine, "%d %d %d\n", pos, size, preco);
     write(fptrTemp, newLine, strlen(newLine));
 
     /*Retrocede um byte e copia o resto do ficheiro antigo para o novo ficheiro */
     lseek(fPtrArt,-1,SEEK_CUR);
     while(read(fPtrArt, &c, 1)!=0) write(fptrTemp, &c, 1);
-    
+
     /*Limpa tudo*/
     close(fPtr);
     close(fptrTemp);
     close(fPtrArt);
     remove("Artigos.txt");
     rename("temp.txt", "Artigos.txt");
-    
+
     write(1, "Nome mudado com Sucesso\n", 25);
     return 0;
 
@@ -138,31 +138,20 @@ int mudaPreco(int codigo, int preco){
 
     /* Substitui os dados necessarios para a mudança de nome */
     sscanf(tempLine, "%d %d %d", &pos, &size, &tempreco);
-    sprintf(newLine, "%d %d %d\n", pos, size, preco); 
+    sprintf(newLine, "%d %d %d\n", pos, size, preco);
     write(fptrTemp, newLine, strlen(newLine));
 
     /*Retrocede um byte e copia o resto do ficheiro antigo para o novo ficheiro */
     lseek(fPtrArt,-1,SEEK_CUR);
     while(read(fPtrArt, &c, 1)!=0) write(fptrTemp, &c, 1);
-    
+
     /*Limpa tudo*/
     close(fptrTemp);
     close(fPtrArt);
     remove("Artigos.txt");
     rename("temp.txt", "Artigos.txt");
-    
+
     write(1, "Preco mudado com Sucesso\n", 26);
     return 0;
 
-}
-
-int main(){
-    addString("Bola",10);
-    addString("Caneta",10);
-    addString("Foice",10);
-    addString("Raquete",10);
-    addString("Violoncelo",10);
-    mudaNome(2,"Peido");
-    mudaPreco(2,500);
-    return 0;
 }

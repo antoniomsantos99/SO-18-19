@@ -6,5 +6,7 @@ int main(){
     addString("Foice",10);
     addString("Raquete",10);
     addString("Violoncelo",10);
+    mudaNome(2,"Peido");
+    mudaPreco(2,500);
     return 0;
 }

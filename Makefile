@@ -1,7 +1,7 @@
 CFLAGS = -IHeaders -Wall -O2 -g
-HEADERS =
+HEADERS = ma.h
 CC = gcc
-OBJ = main.o
+OBJ = main.o ma.o
 
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< $(CFLAGS)

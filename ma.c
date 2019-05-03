@@ -26,7 +26,7 @@ int gotoLines(int fd,int line) {
             counter++;
             if(counter == line) return fd;
         }
-    write(1, "Linha não existente!\n", 30);
+    (void) (write(1, "Linha não existente!\n", 30)+1);
     return -1;
 }
 
@@ -45,15 +45,15 @@ int addString(char input[BUFFER_SIZE],int preco){
     int size = strlen(input);
 
     /*Escreve os dados necessários nos ficheiros */
-    write(fPtr, input, strlen(input));
+    (void) (write(fPtr, input, strlen(input))+1);
     sprintf(buffer, "%d %d %d\n", pos, size, preco);
-    write(fPtrArt, buffer, strlen(buffer));
+    (void) (write(fPtrArt, buffer, strlen(buffer))+1);
 
     /*Encontra o codigo para dar ao artigo (linha do artigos.txt)*/
     lseek(fPtrArt, 0, SEEK_SET);
     int lines = getLines("Artigos.txt");
     sprintf(buffer, "Artigo criado com sucesso! Codigo = %d\n",lines);
-    write(1, buffer, strlen(buffer));
+    (void) (write(1, buffer, strlen(buffer))+1);
 
     /*Fecha os ficheiros*/
     close(fPtr);
@@ -69,7 +69,7 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
     int temPos,tempsize,preco;
 
     if(codigo > getLines("Artigos.txt")){
-        write(1,"Codigo invalido!\n",18);
+        (void) (write(1,"Codigo invalido!\n",18)+1);
         return -1;
     }
 
@@ -81,11 +81,11 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
     /*Arranja o primeiro byte do artigo e o seu tamanho*/
     int pos = lseek(fPtr, -1, SEEK_END) + 1;
     int size = strlen(input);
-    write(fPtr, input, strlen(input));
+    (void) (write(fPtr, input, strlen(input))+1);
 
     /*Copia tudo o que está anterior á linha desejada para outro ficheiro e a linha desejada para uma variavel */
     while(read(fPtrArt, &c, 1)!=0 && codigo >=i){
-        if(i!=codigo) write(fptrTemp, &c, 1);
+        if(i!=codigo) (void) (write(fptrTemp, &c, 1)+1);
         else tempLine[k++] = c;
         if(c == '\n') i++;
     }
@@ -94,11 +94,11 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
     /* Substitui os dados necessarios para a mudança de nome */
     sscanf(tempLine, "%d %d %d", &temPos, &tempsize, &preco);
     sprintf(newLine, "%d %d %d\n", pos, size, preco);
-    write(fptrTemp, newLine, strlen(newLine));
+    (void) (write(fptrTemp, newLine, strlen(newLine))+1);
 
     /*Retrocede um byte e copia o resto do ficheiro antigo para o novo ficheiro */
     lseek(fPtrArt,-1,SEEK_CUR);
-    while(read(fPtrArt, &c, 1)!=0) write(fptrTemp, &c, 1);
+    while(read(fPtrArt, &c, 1)!=0) (void) (write(fptrTemp, &c, 1)+1);
 
     /*Limpa tudo*/
     close(fPtr);
@@ -107,7 +107,7 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
     remove("Artigos.txt");
     rename("temp.txt", "Artigos.txt");
 
-    write(1, "Nome mudado com Sucesso\n", 25);
+    (void) (write(1, "Nome mudado com Sucesso\n", 25)+1);
     return 0;
 
 }
@@ -120,7 +120,7 @@ int mudaPreco(int codigo, int preco){
 
 
     if(codigo > getLines("Artigos.txt")){
-        write(1,"Codigo invalido!\n",18);
+        (void) (write(1,"Codigo invalido!\n",18)+1);
         return -1;
     }
 
@@ -130,7 +130,7 @@ int mudaPreco(int codigo, int preco){
 
     /*Copia tudo o que está anterior á linha desejada para outro ficheiro e a linha desejada para uma variavel */
     while(read(fPtrArt, &c, 1)!=0 && codigo >=i){
-        if(i!=codigo) write(fptrTemp, &c, 1);
+        if(i!=codigo) (void) (write(fptrTemp, &c, 1)+1);
         else tempLine[k++] = c;
         if(c == '\n') i++;
     }
@@ -139,11 +139,11 @@ int mudaPreco(int codigo, int preco){
     /* Substitui os dados necessarios para a mudança de nome */
     sscanf(tempLine, "%d %d %d", &pos, &size, &tempreco);
     sprintf(newLine, "%d %d %d\n", pos, size, preco);
-    write(fptrTemp, newLine, strlen(newLine));
+    (void) (write(fptrTemp, newLine, strlen(newLine))+1);
 
     /*Retrocede um byte e copia o resto do ficheiro antigo para o novo ficheiro */
     lseek(fPtrArt,-1,SEEK_CUR);
-    while(read(fPtrArt, &c, 1)!=0) write(fptrTemp, &c, 1);
+    while(read(fPtrArt, &c, 1)!=0) (void) (write(fptrTemp, &c, 1)+1);
 
     /*Limpa tudo*/
     close(fptrTemp);
@@ -151,7 +151,7 @@ int mudaPreco(int codigo, int preco){
     remove("Artigos.txt");
     rename("temp.txt", "Artigos.txt");
 
-    write(1, "Preco mudado com Sucesso\n", 26);
+    (void) (write(1, "Preco mudado com Sucesso\n", 26)+1);
     return 0;
 
 }

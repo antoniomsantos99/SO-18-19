@@ -6,6 +6,20 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+int contaPal (char s[]) {
+    int i,count=0;
+    char last='\0';
+    for (i=0;s[i]!='\0';i++)
+    {
+    	if (s[i]!=' ' && (last ==' ' || last =='\0'))
+    	{
+    		count ++;
+    	}
+    	last =s[i];
+    }
+    return count;
+}
+
 int main(){
     // argumentos para serem utilizados no sscanf
     char input[100];
@@ -14,7 +28,8 @@ int main(){
     int arg3;
     // loop infinito para tar sempre a pedir novo input (quando ouver input errado dá quits)
     while(1){
-      (void) (read(0, input, 100)+1);
+      read(0, input, 100);
+      if (contaPal(input)>2){
       sscanf(input, "%c %s %d", &arg1, arg2, &arg3);
       if(arg1=='i'){
         addString(arg2,arg3);
@@ -28,7 +43,9 @@ int main(){
         sscanf(input, "%c %d %d", &arg1, &arg3, &arg4);
         mudaPreco(arg3,arg4);
       } // qaualquer outro comando dá quit
-      else break;
+      else return;
+    }
+    else printf("Vai pa puta que te pariu tu e os formatos errados\n");
     }
     return 0;
 }

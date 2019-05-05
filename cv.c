@@ -1,26 +1,25 @@
-#include <stdio.h> 
-#include <string.h> 
-#include <fcntl.h> 
-#include <sys/stat.h> 
-#include <sys/types.h> 
-#include <unistd.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include "Auxiliares.h"
 
 
 int main(){
-    char msg[80];
-    /* Criação de pipes */
-    //mkfifo("ServerCall",0666);
-    //mkfifo("ClientCall",0666);
+    char *msg;
 
-    int fd1;
+    int fd;
+    fd = open("ServerCall",O_WRONLY);
     while(1){
-        fd1 = open("ServerCall",O_RDONLY);
-        //sleep(3);
-        read(fd1, msg, sizeof(msg)); 
-        write(1,msg,strlen(msg)+1);
-        close(fd1); 
-        
+        msg = malloc(100 * sizeof(char *));
+        read(0,msg,80);
+        write(fd, msg, strlen(msg)+1);
+        free(msg);
     }
-    
-    
+
+    close(fd);
+
 }

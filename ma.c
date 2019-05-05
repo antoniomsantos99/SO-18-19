@@ -3,32 +3,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "Auxiliares.h"
 
 #define BUFFER_PATH 20
 #define BUFFER_SIZE 1000
-
-/*Retorna o numero de linhas no ficheiro*/
-int getLines(char path[BUFFER_PATH]) {
-    int counter=0;
-    char buffer;
-    int fd = open(path,O_RDONLY);
-    while(read(fd, &buffer, 1)!=0)
-        if(buffer == '\n') counter++;
-    return counter;
-}
-
-/* Não usado mas poderá dar jeito no futuro */
-int gotoLines(int fd,int line) {
-    int counter=0;
-    char buffer;
-    while(read(fd, &buffer, 1)!=0)
-        if(buffer == '\n'){
-            counter++;
-            if(counter == line) return fd;
-        }
-    (void) (write(1, "Linha não existente!\n", 30)+1);
-    return -1;
-}
 
 int addString(char input[BUFFER_SIZE],int preco){
 
@@ -51,7 +29,7 @@ int addString(char input[BUFFER_SIZE],int preco){
 
     /*Encontra o codigo para dar ao artigo (linha do artigos.txt)*/
     lseek(fPtrArt, 0, SEEK_SET);
-    int lines = getLines("Artigos.txt");
+    int lines = countLines("Artigos.txt");
     sprintf(buffer, "Artigo criado com sucesso! Codigo = %d\n",lines);
     (void) (write(1, buffer, strlen(buffer))+1);
 
@@ -68,7 +46,7 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
     char tempLine[20],newLine[20];
     int temPos,tempsize,preco;
 
-    if(codigo > getLines("Artigos.txt")){
+    if(codigo > countLines("Artigos.txt")){
         (void) (write(1,"Codigo invalido!\n",18)+1);
         return -1;
     }
@@ -119,7 +97,7 @@ int mudaPreco(int codigo, int preco){
     int pos,size,tempreco;
 
 
-    if(codigo > getLines("Artigos.txt")){
+    if(codigo > countLines("Artigos.txt")){
         (void) (write(1,"Codigo invalido!\n",18)+1);
         return -1;
     }

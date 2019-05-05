@@ -1,5 +1,5 @@
 CFLAGS = -IHeaders -Wall -O2 -g
-HEADERS = ma.h
+HEADERS = ma.h Auxiliares.h
 CC = gcc
 OBJ = main.o ma.o
 

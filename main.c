@@ -5,29 +5,8 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "Auxiliares.c"
 
-int contaPal (char s[]) {
-    int i,count=0;
-    char last='\0';
-    for (i=0;s[i]!='\0';i++)
-    {
-    	if (s[i]!=' ' && (last ==' ' || last =='\0'))
-    	{
-    		count ++;
-    	}
-    	last =s[i];
-    }
-    return count;
-}
-
-int isnumber(char c[100])
-{
-  int i;
-  for(i=0;c[i];i++){
-    if (isdigit(c[i]) == 0) return 0;
-  }
-  return 1;
-}
 
 int main(){
     // argumentos para serem utilizados no sscanf
@@ -39,20 +18,20 @@ int main(){
       read(0, input, 100);
       if (contaPal(input)>2){
       sscanf(input, "%c %s %s", &arg1, arg2, arg3);
-      if(arg1=='i' && isnumber(arg3)){
+      if(arg1=='i' && myisnumber(arg3)){
         addString(arg2,atoi(arg3));
       } //comando i para introduzir novo produto
-      else if(arg1=='n' && isnumber(arg2)){
+      else if(arg1=='n' && myisnumber(arg2)){
         sscanf(input, "%c %s %s", &arg1, arg2, arg3);
         mudaNome(atoi(arg2),arg3);
       } // comando p muda o preco, primeiro local, depois preco novo
-      else if(arg1=='p'&& isnumber(arg2) && isnumber(arg3)){
+      else if(arg1=='p'&& myisnumber(arg2) && myisnumber(arg3)){
         sscanf(input, "%c %s %s", &arg1, arg2, arg3);
         mudaPreco(atoi(arg2),atoi(arg3));
       }
-      else printf("Formato errado!");
+      else printf("Formato errado!\n");
     }
-    else printf("Vai pa puta que te pariu tu e os formatos errados\n");
+    else printf("Formato errado!\n");
     }
     return 0;
 }

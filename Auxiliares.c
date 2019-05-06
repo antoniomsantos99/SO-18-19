@@ -26,8 +26,8 @@ int gotoLines(int fd,int line) {
     if(counter == line) return fd;
     char buffer;
     while(read(fd, &buffer, 1)!=0){
-        if(counter == line) return fd;
         if(buffer == '\n') counter++;
+        if(counter == line) return fd;
         }
     (void) (write(1, "Linha não existente!\n", 23)+1);
     return -1;

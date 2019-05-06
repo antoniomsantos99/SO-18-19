@@ -22,14 +22,14 @@ int countLines(char path[BUFFER_PATH]) {
 
 /* Não usado mas poderá dar jeito no futuro */
 int gotoLines(int fd,int line) {
-    int counter=0;
+    int counter=1;
+    if(counter == line) return fd;
     char buffer;
-    while(read(fd, &buffer, 1)!=0)
-        if(buffer == '\n'){
-            counter++;
-            if(counter == line) return fd;
+    while(read(fd, &buffer, 1)!=0){
+        if(counter == line) return fd;
+        if(buffer == '\n') counter++;
         }
-    (void) (write(1, "Linha não existente!\n", 30)+1);
+    (void) (write(1, "Linha não existente!\n", 23)+1);
     return -1;
 }
 /*Conta o nrº de palavras numa string*/

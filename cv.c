@@ -8,6 +8,8 @@
 #include "Auxiliares.h"
 
 
+#pragma GCC diagnostic ignored "-Wunused-result"
+
 int main(){
     char *msg;
 

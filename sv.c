@@ -1,12 +1,13 @@
-#include <stdio.h> 
+#include <stdio.h>
 #include <string.h>
-#include <fcntl.h> 
-#include <sys/stat.h> 
-#include <sys/types.h> 
-#include <unistd.h> 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <stdlib.h> // atoi e atof
 #include "Auxiliares.h"
 
+#pragma GCC diagnostic ignored "-Wunused-result"
 
 //talvez tenha erro todo
 int checkArt(int codigo){
@@ -15,8 +16,8 @@ int checkArt(int codigo){
     int fPtrStock  = open("Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int newfd = gotoLines(fPtrArt,codigo);
     char ch,tempLine[20];
-    int bit,len,preco,k=0; 
-    
+    int bit,len,preco,k=0;
+
 
     if(newfd!=-1){
         while(read(newfd , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
@@ -35,7 +36,7 @@ int atualizaStock(int codigo, char stocks[]){
     int fdVendas = open("Vendas.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int fdArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     char ch,tempLine[20],newLine[20];
-    int bit,len,preco,k=0,counter=1; 
+    int bit,len,preco,k=0,counter=1;
 
 
 /*Escreve a venda*/
@@ -48,7 +49,7 @@ int atualizaStock(int codigo, char stocks[]){
         (void)(write(fdVendas,newLine,strlen(newLine))+1);
     }
 
-    
+
     while(read(fdStock, &ch, 1)!=0 && counter != codigo) if(ch == '\n') counter++;
     while(counter < codigo){
         write(fdStock,"\n",1);
@@ -56,11 +57,11 @@ int atualizaStock(int codigo, char stocks[]){
     }
 
     write(fdStock,stocks,strlen(stocks));
-    
+
     return 0;
 }
-
-int caller(char cmd[]){
+//MUDEI DE INT PARA VOID PQ TAVA A DAR ERRO
+void caller(char cmd[]){
     int arg1;
     char arg2[100];
     if(0<contaPal(cmd) && contaPal(cmd) < 3){
@@ -81,11 +82,11 @@ int main(){
     while(1){
         fd1 = open("ServerCall",O_RDONLY);
         //sleep(3);
-        read(fd1, msg, sizeof(msg)); 
+        read(fd1, msg, sizeof(msg));
         caller(msg);
-        close(fd1); 
-        
+        close(fd1);
+
     }
-    
-    
+
+
 }

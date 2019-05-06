@@ -8,6 +8,8 @@
 #include "Auxiliares.c"
 
 
+#pragma GCC diagnostic ignored "-Wunused-result"
+
 int main(){
     // argumentos para serem utilizados no sscanf
     char input[100];

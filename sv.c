@@ -74,15 +74,17 @@ void caller(char cmd[]){
 }
 
 int main(){
-    char msg[80];
+    char *msg = malloc(100*sizeof(char *));
     /* Criação de pipes */
     mkfifo("ServerCall",0666);
     mkfifo("ClientCall",0666);
     int fd1;
     while(1){
         fd1 = open("ServerCall",O_RDONLY);
-        //sleep(3);
         read(fd1, msg, sizeof(msg));
+
+
+
         caller(msg);
         close(fd1);
 

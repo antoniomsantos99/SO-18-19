@@ -8,6 +8,7 @@ OBJTESTES = criaCasosTeste.o
 
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< $(CFLAGS)
+all: program sv cv casosTestes
 program: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 sv: $(OBJSV)
@@ -18,7 +19,7 @@ casosTestes: $(OBJTESTES)
 	$(CC) -o $@ $^ $(CFLAGS)
 clean:
 	rm *.o
-	rm program
-	rm sv
-	rm cv
-	rm casosTestes
+	rm -f program
+	rm -f sv
+	rm -f cv
+	rm -f casosTestes

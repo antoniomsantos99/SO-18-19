@@ -15,16 +15,25 @@ int checkArt(int codigo){
     int fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int fPtrStock  = open("Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int newfd = gotoLines(fPtrArt,codigo);
-    char ch,tempLine[20];
+    int newfd1 = gotoLines(fPtrStock,codigo);
+    char ch,tempLine[20],buffer[BUFFER_SIZE];
     int bit,len,preco,k=0;
 
 
-    if(newfd!=-1){
+    if(newfd!=-1 && newfd1!=-1){
+        /*Saca o preço*/
         while(read(newfd , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
         tempLine[k] = '\0';
         sscanf(tempLine,"%d %d %d",&bit, &len, &preco);
-        printf("%d\n",preco);
-    }
+        /*Saca o Stock*/
+        k=0;
+        while(read(newfd1 , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
+        tempLine[k] = '\0';
+        if(strlen(tempLine)==0) printf("Stock não inserido\n");
+        else printf("%d %s\n",preco,tempLine);
+        
+        
+    }else printf("Oof\n");
 
     close(fPtrArt);
     close(fPtrStock);
@@ -36,9 +45,9 @@ int atualizaStock(int codigo, char stocks[]){
     int fdVendas = open("Vendas.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int fdArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     char ch,tempLine[20],newLine[20];
-    int bit,len,preco,k=0,counter=1;
+    int bit,len,preco,k=0,counter=1,stocktotal;
 
-
+if(codigo <= countLines("Artigos.txt")){
 /*Escreve a venda*/
     if(gotoLines(fdArt,codigo)!=-1){
         while(read(fdArt, &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch;
@@ -49,15 +58,48 @@ int atualizaStock(int codigo, char stocks[]){
         (void)(write(fdVendas,newLine,strlen(newLine))+1);
     }
 
-
+/*Atualiza o stock*/
+/*Se o código for maior que o nrº de linhas do ficheiro dá append das linhas necessárias e acrescenta o stock*/
+if(countLines("Stocks.txt")<codigo){
     while(read(fdStock, &ch, 1)!=0 && counter != codigo) if(ch == '\n') counter++;
     while(counter < codigo){
         write(fdStock,"\n",1);
         counter++;
+        }
+
+write(fdStock,stocks,strlen(stocks));
+} else{
+        int fdTemp  = open("replace.tmp", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+        int i = 1;
+        k=0;
+        while(read(fdStock, &ch, 1)!=0 && codigo >=i){
+        if(i!=codigo) (void) (write(fdTemp, &ch, 1)+1);
+        else tempLine[k++] = ch;
+        if(ch == '\n') i++;
     }
+    tempLine[k]='\0';
+    
+    if(strlen(tempLine)==1) stocktotal = atoi(stocks);
+    else stocktotal = atoi(stocks)+atoi(tempLine);
 
-    write(fdStock,stocks,strlen(stocks));
+    sprintf(newLine,"%d\n",stocktotal);
+    write(fdTemp,newLine,strlen(newLine));
 
+
+    lseek(fdStock,-1,SEEK_CUR);
+    while(read(fdStock, &ch, 1)!=0) (void) (write(fdTemp, &ch, 1)+1);
+    
+    close(fdTemp);
+    remove("Stocks.txt");
+    rename("replace.tmp", "Stocks.txt");
+}
+}
+else printf("Codigo Invalido!\n");
+ 
+    //write(fdStock,stocks,strlen(stocks));
+    close(fdStock);
+    close(fdArt);
+    close(fdVendas);
     return 0;
 }
 //MUDEI DE INT PARA VOID PQ TAVA A DAR ERRO

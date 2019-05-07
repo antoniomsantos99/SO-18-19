@@ -50,3 +50,8 @@ int myisnumber(char c[]){
   }
   return 1;
 }
+/*Vai para a linha seguinte*/
+void nextLine(int fd){
+  char c;
+  while(read(fd,&c,1)!=0 && c != '\n');
+}

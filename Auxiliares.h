@@ -1,3 +1,4 @@
+
 #ifndef AUX
 #define AUX
 
@@ -16,5 +17,6 @@ int contaPal (char s[]);
 /* Verifica se uma string é um número */
 int myisnumber(char c[100]);
 
+void nextLine(int fd);
 
 #endif

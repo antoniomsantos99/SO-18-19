@@ -1,8 +1,8 @@
 CFLAGS = -IHeaders -Wall -O2 -g
-HEADERS = ma.h Auxiliares.h
+HEADERS = ag.h ma.h Auxiliares.h
 CC = gcc
 OBJDIR = obj
-OBJ = ma.o Auxiliares.o
+OBJ = ma.o Auxiliares.o ag.o
 OBJSV = sv.o Auxiliares.o
 OBJCV = cv.o
 OBJTESTES = criaCasosTeste.o
@@ -10,7 +10,7 @@ OBJAG = ag.o Auxiliares.o
 
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< $(CFLAGS)
-all: ma sv cv casosTestes ag
+all: ma sv cv casosTestes
 ma: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 sv: $(OBJSV)
@@ -18,8 +18,6 @@ sv: $(OBJSV)
 cv: $(OBJCV)
 	$(CC) -o $@ $^ $(CFLAGS)
 casosTestes: $(OBJTESTES)
-	$(CC) -o $@ $^ $(CFLAGS)
-ag: $(OBJAG)
 	$(CC) -o $@ $^ $(CFLAGS)
 clean:
 	rm -f *.o

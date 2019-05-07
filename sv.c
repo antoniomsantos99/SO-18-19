@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h> // atoi e atof
-#include "Auxiliares.h"
+#include "headers/Auxiliares.h"
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
@@ -31,8 +31,8 @@ int checkArt(int codigo){
         tempLine[k] = '\0';
         if(strlen(tempLine)==0) printf("Stock não inserido\n");
         else printf("%d %s\n",preco,tempLine);
-        
-        
+
+
     }else printf("Oof\n");
 
     close(fPtrArt);
@@ -78,7 +78,7 @@ write(fdStock,stocks,strlen(stocks));
         if(ch == '\n') i++;
     }
     tempLine[k]='\0';
-    
+
     if(strlen(tempLine)==1) stocktotal = atoi(stocks);
     else stocktotal = atoi(stocks)+atoi(tempLine);
 
@@ -88,14 +88,14 @@ write(fdStock,stocks,strlen(stocks));
 
     lseek(fdStock,-1,SEEK_CUR);
     while(read(fdStock, &ch, 1)!=0) (void) (write(fdTemp, &ch, 1)+1);
-    
+
     close(fdTemp);
     remove("Stocks.txt");
     rename("replace.tmp", "Stocks.txt");
 }
 }
 else printf("Codigo Invalido!\n");
- 
+
     //write(fdStock,stocks,strlen(stocks));
     close(fdStock);
     close(fdArt);
@@ -104,6 +104,7 @@ else printf("Codigo Invalido!\n");
 }
 //MUDEI DE INT PARA VOID PQ TAVA A DAR ERRO
 void caller(char cmd[]){
+    printf("%d\n",contaPal(cmd));
     int arg1;
     char arg2[100];
     if(0<contaPal(cmd) && contaPal(cmd) < 3){
@@ -121,16 +122,23 @@ int main(){
     mkfifo("ServerCall",0666);
     mkfifo("ClientCall",0666);
     int fd1;
+    fd1 = open("ServerCall",O_RDONLY);
     while(1){
-        fd1 = open("ServerCall",O_RDONLY);
+      int num = 0;
+        //fd1 = open("ServerCall",O_RDONLY);
         read(fd1, msg, sizeof(msg));
+        printf("%s",msg);
+        char *token;
+        token = strtok(msg,"?");
+        while(token!=NULL){
+          printf("%s\n",token);
+          token=strtok(NULL,"?");
+          caller(msg);
+        }
 
-
-
-        caller(msg);
-        close(fd1);
-
+        scanf("%d",&num);
     }
+    close(fd1);
 
 
 }

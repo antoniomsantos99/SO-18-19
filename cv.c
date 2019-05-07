@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "Auxiliares.h"
+#include "headers/Auxiliares.h"
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
@@ -21,8 +21,10 @@ int main(int argc, char *argv[]){
     strcat(recebido,argv[1]);
     strcat(recebido," ");
     strcat(recebido,argv[2]);
+    strcat(recebido,"?");
     printf("string: %s\ntamanho: %ld\n",recebido,strlen(recebido)); // debug
     write(fd,recebido,strlen(recebido));
+    free(recebido);
   }else{//executa este se for feita manualmente sem argumentos
     while(1){
       msg = malloc(100 * sizeof(char *));

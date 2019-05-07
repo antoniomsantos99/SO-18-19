@@ -6,7 +6,7 @@
 #include <math.h>
 
 #define NR_FORKS 2
-#define MAX_STOCKS 1000
+#define MAX_STOCKS 100
 #define MAX_LINHA 10
 
 int main(){

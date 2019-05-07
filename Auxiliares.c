@@ -55,3 +55,16 @@ void nextLine(int fd){
   char c;
   while(read(fd,&c,1)!=0 && c != '\n');
 }
+
+/*Adiciona a um array caso não exista*/
+int addVer (int a[],int nr){
+  int i = 0;
+  while(a[i]){
+    if(a[i]==nr){
+      return 0;
+    }
+    i++;
+  }
+  a[i]=nr;
+  return 1;
+}

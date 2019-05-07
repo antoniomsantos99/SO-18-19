@@ -68,6 +68,7 @@ if(countLines("Stocks.txt")<codigo){
         }
 
 write(fdStock,stocks,strlen(stocks));
+write(fdStock,"\n",1);
 } else{
         int fdTemp  = open("replace.tmp", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
         int i = 1;
@@ -104,9 +105,9 @@ else printf("Codigo Invalido!\n");
 }
 //MUDEI DE INT PARA VOID PQ TAVA A DAR ERRO
 void caller(char cmd[]){
-    printf("%d\n",contaPal(cmd));
     int arg1;
     char arg2[100];
+    printf("%s\n",cmd);
     if(0<contaPal(cmd) && contaPal(cmd) < 3){
         sscanf(cmd,"%d %s",&arg1,arg2);
         if(contaPal(cmd) == 1)checkArt(arg1);
@@ -117,28 +118,28 @@ void caller(char cmd[]){
 }
 
 int main(){
-    char *msg = malloc(100*sizeof(char *));
+    //char *msg = malloc(100*sizeof(char *));
     /* Criação de pipes */
     mkfifo("ServerCall",0666);
     mkfifo("ClientCall",0666);
     int fd1;
-    fd1 = open("ServerCall",O_RDONLY);
     while(1){
-      int num = 0;
-        //fd1 = open("ServerCall",O_RDONLY);
+
+        fd1 = open("ServerCall",O_RDONLY);
+        char *msg = malloc(10000*sizeof(char *));
         read(fd1, msg, sizeof(msg));
-        printf("%s",msg);
-        char *token;
+
+        char *token = malloc(100000*sizeof(char *));
         token = strtok(msg,"?");
+
         while(token!=NULL){
-          printf("%s\n",token);
           token=strtok(NULL,"?");
           caller(msg);
+        
         }
-
-        scanf("%d",&num);
+        free(msg);
+        close(fd1);
     }
-    close(fd1);
 
 
 }

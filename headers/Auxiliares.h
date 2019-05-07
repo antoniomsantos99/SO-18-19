@@ -19,4 +19,7 @@ int myisnumber(char c[100]);
 
 void nextLine(int fd);
 
+/*Adiciona a um array caso não exista, return 1 se colocou, 0 se não*/
+int addVer (int a[],int nr);
+
 #endif

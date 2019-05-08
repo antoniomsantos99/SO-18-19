@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>//atoi
 #include <string.h>//strlen
+#include <sys/wait.h> // for wait()
 #include <unistd.h>//O_CREAT
 #include <fcntl.h>//read write
 
@@ -145,8 +146,16 @@ int main(){
   while(1){
     read(0, input, 100);
     if(input[0] == 'a'){
-      agregador();
-      
+      pid_t pid = fork();
+      if(pid==0){
+        char *args[] = {"./ag",NULL};
+        execvp (args[0],args);
+        _exit(0);
+      }else{
+        wait(NULL);
+      }
+      //agregador();
+
     }else if (contaPal(input)>2){
       sscanf(input, "%c %s %s", &arg1, arg2, arg3);
       if(arg1=='i' && myisnumber(arg3)){

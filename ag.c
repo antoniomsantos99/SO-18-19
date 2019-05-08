@@ -60,3 +60,8 @@ int agregador(){
   return 0;
 
 }
+
+int main(){
+  agregador();
+  return 0;
+}

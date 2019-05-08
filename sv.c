@@ -12,8 +12,8 @@
 //talvez tenha erro todo
 int checkArt(int codigo){
 
-  int fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  int fPtrStock  = open("Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  int fPtrArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  int fPtrStock  = open("ficheirosTexto/Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int newfd = gotoLines(fPtrArt,codigo);
   int newfd1 = gotoLines(fPtrStock,codigo);
   char ch,tempLine[20];
@@ -41,13 +41,13 @@ int checkArt(int codigo){
 }
 
 int atualizaStock(int codigo, char stocks[]){
-  int fdStock = open("Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  int fdVendas = open("Vendas.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  int fdArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  int fdStock = open("ficheirosTexto/Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  int fdVendas = open("ficheirosTexto/Vendas.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  int fdArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   char ch,tempLine[20],newLine[20];
   int bit,len,preco,k=0,counter=1,stocktotal;
 
-  if(codigo <= countLines("Artigos.txt")){
+  if(codigo <= countLines("ficheirosTexto/Artigos.txt")){
     /*Escreve a venda*/
     if(gotoLines(fdArt,codigo)!=-1){
       while(read(fdArt, &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch;
@@ -60,7 +60,7 @@ int atualizaStock(int codigo, char stocks[]){
 
     /*Atualiza o stock*/
     /*Se o código for maior que o nrº de linhas do ficheiro dá append das linhas necessárias e acrescenta o stock*/
-    if(countLines("Stocks.txt")<codigo){
+    if(countLines("ficheirosTexto/Stocks.txt")<codigo){
       while(read(fdStock, &ch, 1)!=0 && counter != codigo) if(ch == '\n') counter++;
       while(counter < codigo){
         write(fdStock,"\n",1);
@@ -70,7 +70,7 @@ int atualizaStock(int codigo, char stocks[]){
       write(fdStock,stocks,strlen(stocks));
       write(fdStock,"\n",1);
     } else{
-      int fdTemp  = open("replace.tmp", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+      int fdTemp  = open("ficheirosTexto/replace.tmp", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
       int i = 1;
       k=0;
       while(read(fdStock, &ch, 1)!=0 && codigo >=i){
@@ -91,8 +91,8 @@ int atualizaStock(int codigo, char stocks[]){
       while(read(fdStock, &ch, 1)!=0) (void) (write(fdTemp, &ch, 1)+1);
 
       close(fdTemp);
-      remove("Stocks.txt");
-      rename("replace.tmp", "Stocks.txt");
+      remove("ficheirosTexto/Stocks.txt");
+      rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
     }
   }
   else printf("Codigo Invalido!\n");

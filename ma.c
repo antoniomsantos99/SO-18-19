@@ -11,18 +11,18 @@
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
-#define BUFFER_PATH 20
+#define BUFFER_PATH 100
 #define BUFFER_SIZE 1000
 
 int addString(char input[BUFFER_SIZE],int preco){
 
   int fPtr, fPtrArt;
-  char path[BUFFER_PATH] = "Strings.txt";
+  char path[BUFFER_PATH] = "ficheirosTexto/Strings.txt";
   char buffer[BUFFER_SIZE];
 
   /*Abre os ficheiros necessarios*/
   fPtr  = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  fPtrArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
 
   /*Arranja o primeiro byte do artigo e o seu tamanho*/
   int pos = lseek(fPtr, -1, SEEK_END) + 1;
@@ -35,7 +35,7 @@ int addString(char input[BUFFER_SIZE],int preco){
 
   /*Encontra o codigo para dar ao artigo (linha do artigos.txt)*/
   lseek(fPtrArt, 0, SEEK_SET);
-  int lines = countLines("Artigos.txt");
+  int lines = countLines("ficheirosTexto/Artigos.txt");
   sprintf(buffer, "Artigo criado com sucesso! Codigo = %d\n",lines);
   (void) (write(1, buffer, strlen(buffer))+1);
 
@@ -48,19 +48,19 @@ int addString(char input[BUFFER_SIZE],int preco){
 
 int mudaNome(int codigo, char input[BUFFER_SIZE]){
   int fPtr, fPtrArt,fptrTemp,i=1,k=0;
-  char path[BUFFER_PATH] = "Strings.txt",c;
+  char path[BUFFER_PATH] = "ficheirosTexto/Strings.txt",c;
   char tempLine[20],newLine[20];
   int temPos,tempsize,preco;
 
-  if(codigo > countLines("Artigos.txt")){
+  if(codigo > countLines("ficheirosTexto/Artigos.txt")){
     (void) (write(1,"Codigo invalido!\n",18)+1);
     return -1;
   }
 
   /*Abre os ficheiros necessarios*/
   fPtr  = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  fptrTemp = open("temp.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  fPtrArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  fptrTemp = open("ficheirosTexto/temp.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
 
   /*Arranja o primeiro byte do artigo e o seu tamanho*/
   int pos = lseek(fPtr, -1, SEEK_END) + 1;
@@ -88,8 +88,8 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
   close(fPtr);
   close(fptrTemp);
   close(fPtrArt);
-  remove("Artigos.txt");
-  rename("temp.txt", "Artigos.txt");
+  remove("ficheirosTexto/Artigos.txt");
+  rename("ficheirosTexto/temp.txt", "ficheirosTexto/Artigos.txt");
 
   (void) (write(1, "Nome mudado com Sucesso\n", 25)+1);
   return 0;
@@ -103,14 +103,14 @@ int mudaPreco(int codigo, int preco){
   int pos,size,tempreco;
 
 
-  if(codigo > countLines("Artigos.txt")){
+  if(codigo > countLines("ficheirosTexto/Artigos.txt")){
     (void) (write(1,"Codigo invalido!\n",18)+1);
     return -1;
   }
 
   /*Abre os ficheiros necessarios*/
-  fPtrArt  = open("Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  fptrTemp = open("temp.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  fPtrArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  fptrTemp = open("ficheirosTexto/temp.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
 
   /*Copia tudo o que está anterior á linha desejada para outro ficheiro e a linha desejada para uma variavel */
   while(read(fPtrArt, &c, 1)!=0 && codigo >=i){
@@ -132,8 +132,8 @@ int mudaPreco(int codigo, int preco){
   /*Limpa tudo*/
   close(fptrTemp);
   close(fPtrArt);
-  remove("Artigos.txt");
-  rename("temp.txt", "Artigos.txt");
+  remove("ficheirosTexto/Artigos.txt");
+  rename("ficheirosTexto/temp.txt", "Artigos.txt");
 
   (void) (write(1, "Preco mudado com Sucesso\n", 26)+1);
   return 0;

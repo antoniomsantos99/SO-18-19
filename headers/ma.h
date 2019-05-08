@@ -1,7 +1,7 @@
 #ifndef MA
 #define MA
 
-#define BUFFER_PATH 20
+#define BUFFER_PATH 100
 #define BUFFER_SIZE 1000
 
 /*Retorna o numero de linhas no ficheiro*/

@@ -23,7 +23,6 @@ int gotoLines(int fd,int line) {
     if(buffer == '\n') counter++;
     if(counter == line) return fd;
   }
-  (void) (write(1, "Linha não existente!\n", 23)+1);
   return -1;
 }
 /*Conta o nrº de palavras numa string*/

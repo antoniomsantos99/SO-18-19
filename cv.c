@@ -1,3 +1,6 @@
+
+#include <stdio.h> //debug
+
 #include <stdlib.h> //malloc
 #include <string.h> // strlen
 #include <fcntl.h> // O_CREAT,O_WRONLY
@@ -10,8 +13,7 @@
 int main(int argc, char *argv[]){
   char *msg;
 
-  int fd;
-  fd = open("ServerCall",O_WRONLY);
+  int fd = open("ServerCall",O_WRONLY);
 
   if(argc==3){//quando recebemos argumetnos da criaCasosTeste.c
     char *recebido = malloc(100*sizeof(char *));
@@ -33,6 +35,12 @@ int main(int argc, char *argv[]){
       read(0,msg,100);
       strcat(msg,"?");
       write(fd, msg, strlen(msg)+1);
+
+      int fPtrCliente = open("ClientCall",O_RDONLY);
+      read(fPtrCliente,msg,100);
+      write(1,msg,strlen(msg)+1);
+
+      close(fPtrCliente);
       free(msg);
     }
   }

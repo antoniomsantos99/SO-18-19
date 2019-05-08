@@ -9,8 +9,8 @@
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
+//PRONTO E A FUNCIONAR BEM, NÃO MECHER
 int checkArt(int codigo){
-
   int fPtrArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fPtrStock  = open("ficheirosTexto/Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int newfd = gotoLines(fPtrArt,codigo);
@@ -18,6 +18,7 @@ int checkArt(int codigo){
   char ch,tempLine[20];
   int bit,len,preco,k=0;
 
+  int fPtrCliente = open("ClientCall",O_WRONLY);
 
   if(newfd!=-1 && newfd1!=-1){
     /*Saca o preço*/
@@ -28,15 +29,20 @@ int checkArt(int codigo){
     k=0;
     while(read(newfd1 , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
     tempLine[k] = '\0';
-    if(strlen(tempLine)==0) printf("Stock não inserido\n");
-    else printf("%d %s\n",preco,tempLine);
-
-
-  }else printf("Oof\n");
+    if(strlen(tempLine)==0) {
+      write(fPtrCliente,"Artigo sem stock.\n",18+1);
+    }else{
+      char newLine[100];
+      sprintf(newLine,"Stock: %s  Preço: %d\n",tempLine,preco);
+      write(fPtrCliente,newLine,strlen(newLine)+1);
+    }//printf("%d %s\n",preco,tempLine);
+  }else write(fPtrCliente,"Erro: Artigo não existe.\n",25+1);
 
   close(fPtrArt);
   close(fPtrStock);
-  if (newfd==-1) return 1; else return 0;
+  close(fPtrCliente);
+
+  return 0;
 }
 
 int atualizaStock(int codigo, char stocks[]){
@@ -46,6 +52,8 @@ int atualizaStock(int codigo, char stocks[]){
   char ch,tempLine[20],newLine[20];
   int bit,len,preco,k=0,counter=1,stocktotal;
 
+  int fPtrCliente = open("ClientCall",O_WRONLY);
+
   if(codigo <= countLines("ficheirosTexto/Artigos.txt")){
     /*Escreve a venda*/
     if(gotoLines(fdArt,codigo)!=-1){
@@ -54,7 +62,7 @@ int atualizaStock(int codigo, char stocks[]){
       sscanf(tempLine,"%d %d %d",&bit, &len, &preco);
       sprintf(newLine,"%d %d %d\n", codigo, atoi(stocks), (atoi(stocks)*preco));
       lseek(fdVendas,-1, SEEK_END);
-      (void)(write(fdVendas,newLine,strlen(newLine))+1);
+      write(fdVendas,newLine,strlen(newLine));
     }
 
     /*Atualiza o stock*/
@@ -68,6 +76,7 @@ int atualizaStock(int codigo, char stocks[]){
 
       write(fdStock,stocks,strlen(stocks));
       write(fdStock,"\n",1);
+      write(fPtrCliente,"Stock criado com sucesso.\n",26+1);
     } else{
       int fdTemp  = open("ficheirosTexto/replace.tmp", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
       int i = 1;
@@ -87,37 +96,33 @@ int atualizaStock(int codigo, char stocks[]){
 
 
       lseek(fdStock,-1,SEEK_CUR);
-      while(read(fdStock, &ch, 1)!=0) (void) (write(fdTemp, &ch, 1)+1);
+      while(read(fdStock, &ch, 1)!=0) write(fdTemp, &ch, 1);
 
       close(fdTemp);
       remove("ficheirosTexto/Stocks.txt");
       rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
+      write(fPtrCliente,"Stock adicionado com sucesso.\n",31+1);
     }
-  }
-  else printf("Codigo Invalido!\n");
+  }else write(fPtrCliente,"Erro: Artigo não existe.\n",25+1);
 
-  //write(fdStock,stocks,strlen(stocks));
   close(fdStock);
   close(fdArt);
   close(fdVendas);
+
+  close(fPtrCliente);
   return 0;
 }
 //MUDEI DE INT PARA VOID PQ TAVA A DAR ERRO
 void caller(char cmd[]){
   int arg1;
   char arg2[100];
-  printf("%s\n",cmd);
-  if(0<contaPal(cmd) && contaPal(cmd) < 3){
-    sscanf(cmd,"%d %s",&arg1,arg2);
-    if(contaPal(cmd) == 1)checkArt(arg1);
-    else atualizaStock(arg1,arg2);
-  }
-  else write(1,"Comando Invalido!",18);
 
+  sscanf(cmd,"%d %s",&arg1,arg2);
+  if(contaPal(cmd) == 1) checkArt(arg1);
+  if(contaPal(cmd) == 2) atualizaStock(arg1,arg2);
 }
 
 int main(){
-  //char *msg = malloc(100*sizeof(char *));
   /* Criação de pipes */
   mkfifo("ServerCall",0666);
   mkfifo("ClientCall",0666);
@@ -125,10 +130,10 @@ int main(){
   while(1){
 
     fd1 = open("ServerCall",O_RDONLY);
-    char *msg = malloc(10000*sizeof(char *));
+    char *msg = malloc(100*sizeof(char *));
     read(fd1, msg, sizeof(msg));
 
-    char *token = malloc(100000*sizeof(char *));
+    char *token = malloc(100*sizeof(char *));
     token = strtok(msg,"?");
 
     while(token!=NULL){

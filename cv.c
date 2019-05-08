@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 
       int fPtrCliente = open("ClientCall",O_RDONLY);
       read(fPtrCliente,msg,100);
-      write(1,msg,strlen(msg));
+      write(1,msg,strlen(msg)+1);
 
       close(fPtrCliente);
       free(msg);

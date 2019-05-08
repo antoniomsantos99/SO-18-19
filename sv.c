@@ -30,7 +30,7 @@ int checkArt(int codigo){
     while(read(newfd1 , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
     tempLine[k] = '\0';
     if(strlen(tempLine)==0) {
-      write(fPtrCliente,"Artigo sem stock.\n",18);
+      write(fPtrCliente,"Artigo sem stock.\n",strlen("Artigo sem stock.\n")+1);
     }else{
       char newLine[100];
       sprintf(newLine,"Stock: %s  Preço: %d\n",tempLine,preco);
@@ -103,7 +103,7 @@ int atualizaStock(int codigo, char stocks[]){
       rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
       write(fPtrCliente,"Stock adicionado com sucesso.\n",30);
     }
-  }else write(fPtrCliente,"Erro: Artigo não existe.\n",26);
+  }else write(fPtrCliente,"Erro: Artigo não existe.\n",strlen("Erro: Artigo não existe.\n")+1);
 
   close(fdStock);
   close(fdArt);

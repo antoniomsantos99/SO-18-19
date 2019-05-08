@@ -15,7 +15,7 @@ int checkArt(int codigo){
   int fPtrStock  = open("ficheirosTexto/Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int newfd = gotoLines(fPtrArt,codigo);
   int newfd1 = gotoLines(fPtrStock,codigo);
-  char ch,tempLine[20];
+  char ch,tempLine[BUFFER_SIZE];
   int bit,len,preco,k=0;
 
   int fPtrCliente = open("ClientCall",O_WRONLY);
@@ -49,7 +49,7 @@ int atualizaStock(int codigo, char stocks[]){
   int fdStock = open("ficheirosTexto/Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdVendas = open("ficheirosTexto/Vendas.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  char ch,tempLine[20],newLine[20];
+  char ch,tempLine[BUFFER_SIZE],newLine[BUFFER_SIZE];
   int bit,len,preco,k=0,counter=1,stocktotal;
 
   int fPtrCliente = open("ClientCall",O_WRONLY);
@@ -101,9 +101,9 @@ int atualizaStock(int codigo, char stocks[]){
       close(fdTemp);
       remove("ficheirosTexto/Stocks.txt");
       rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
-      write(fPtrCliente,"Stock adicionado com sucesso.\n",31+1);
+      write(fPtrCliente,"Stock adicionado com sucesso.\n",31);
     }
-  }else write(fPtrCliente,"Erro: Artigo não existe.\n",25+1);
+  }else write(fPtrCliente,"Erro: Artigo não existe.\n",26);
 
   close(fdStock);
   close(fdArt);
@@ -118,6 +118,7 @@ void caller(char cmd[]){
   char arg2[100];
 
   sscanf(cmd,"%d %s",&arg1,arg2);
+  printf("%d %s\n",arg1,arg2);
   if(contaPal(cmd) == 1) checkArt(arg1);
   if(contaPal(cmd) == 2) atualizaStock(arg1,arg2);
 }

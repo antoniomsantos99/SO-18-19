@@ -36,7 +36,7 @@ int checkArt(int codigo){
       sprintf(newLine,"Stock: %s  Preço: %d\n",tempLine,preco);
       write(fPtrCliente,newLine,strlen(newLine)+1);
     }//printf("%d %s\n",preco,tempLine);
-  }else write(fPtrCliente,"Erro: Artigo não existe.\n",25+1);
+  }else write(fPtrCliente,"Erro: Artigo não existe.\n",25);
 
   close(fPtrArt);
   close(fPtrStock);

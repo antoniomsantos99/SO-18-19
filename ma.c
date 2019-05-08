@@ -144,9 +144,10 @@ int main(){
   // loop infinito para tar sempre a pedir novo input (quando ouver input errado dá quits)
   while(1){
     read(0, input, 100);
-    if(input[0] == 'a') agregador();
-
-    else if (contaPal(input)>2){
+    if(input[0] == 'a'){
+      agregador();
+      
+    }else if (contaPal(input)>2){
       sscanf(input, "%c %s %s", &arg1, arg2, arg3);
       if(arg1=='i' && myisnumber(arg3)){
         addString(arg2,atoi(arg3));

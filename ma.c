@@ -4,10 +4,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <ctype.h>
+
 #include "headers/Auxiliares.h"
 #include "headers/ma.h"
 #include "headers/ag.h"
-
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 

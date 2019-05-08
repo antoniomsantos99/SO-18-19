@@ -49,20 +49,18 @@ int atualizaStock(int codigo, char stocks[]){
   int fdStock = open("ficheirosTexto/Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdVendas = open("ficheirosTexto/Vendas.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  char ch,tempLine[BUFFER_SIZE],newLine[BUFFER_SIZE];
+  char ch,tempLine[BUFFER_SIZE],newLine[BUFFER_SIZE],newLineV[BUFFER_SIZE];
   int bit,len,preco,k=0,counter=1,stocktotal;
 
   int fPtrCliente = open("ClientCall",O_WRONLY);
 
   if(codigo <= countLines("ficheirosTexto/Artigos.txt")){
     /*Escreve a venda*/
-    if(gotoLines(fdArt,codigo)!=-1){
+    if(gotoLines(fdArt,codigo)!=-1 && atoi(stocks)<0){
       while(read(fdArt, &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch;
       tempLine[k] = '\0';
       sscanf(tempLine,"%d %d %d",&bit, &len, &preco);
-      sprintf(newLine,"%d %d %d\n", codigo, atoi(stocks), (atoi(stocks)*preco));
-      lseek(fdVendas,-1, SEEK_END);
-      write(fdVendas,newLine,strlen(newLine));
+      sprintf(newLineV,"%d %d %d\n", codigo, -atoi(stocks), -(atoi(stocks)*preco));
     }
 
     /*Atualiza o stock*/
@@ -90,19 +88,26 @@ int atualizaStock(int codigo, char stocks[]){
 
       if(strlen(tempLine)==1) stocktotal = atoi(stocks);
       else stocktotal = atoi(stocks)+atoi(tempLine);
-
+      if(stocktotal<0) write(fPtrCliente,"Stock não pode ser negativo!\n",30);
+      else{
       sprintf(newLine,"%d\n",stocktotal);
       write(fdTemp,newLine,strlen(newLine));
+      
+      if(atoi(stocks)<0){
+      lseek(fdVendas,-1, SEEK_END);
+      write(fdVendas,newLineV,strlen(newLineV));
+      }
 
 
       lseek(fdStock,-1,SEEK_CUR);
       while(read(fdStock, &ch, 1)!=0) write(fdTemp, &ch, 1);
 
-      close(fdTemp);
       remove("ficheirosTexto/Stocks.txt");
       rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
       write(fPtrCliente,"Stock adicionado com sucesso.\n",30);
     }
+    close(fdTemp);
+  }
   }else write(fPtrCliente,"Erro: Artigo não existe.\n",strlen("Erro: Artigo não existe.\n")+1);
 
   close(fdStock);

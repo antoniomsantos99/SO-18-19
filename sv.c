@@ -1,15 +1,14 @@
 #include <stdio.h>
 #include <string.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <sys/stat.h> //fifo (pipe)
 #include <unistd.h>
+#include <fcntl.h>
 #include <stdlib.h> // atoi e atof
+
 #include "headers/Auxiliares.h"
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
-//talvez tenha erro todo
 int checkArt(int codigo){
 
   int fPtrArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);

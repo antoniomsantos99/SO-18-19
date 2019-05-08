@@ -1,9 +1,8 @@
-#include <stdio.h>
+#include <stdio.h> // sprintf()
 #include <sys/wait.h> // for wait()
 #include <unistd.h> // for fork()
 #include <time.h> // time(NULL)
 #include <stdlib.h> // rand()
-#include <math.h>
 
 #define NR_FORKS 2
 #define MAX_STOCKS 100

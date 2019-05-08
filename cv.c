@@ -1,16 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include <stdlib.h> //malloc
+#include <string.h> // strlen
+#include <fcntl.h> // O_CREAT,O_WRONLY
+#include <unistd.h> // read() write()
+
 #include "headers/Auxiliares.h"
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
 int main(int argc, char *argv[]){
-  printf("Tenho %d argumentos!\n",argc); // debug
   char *msg;
 
   int fd;
@@ -22,14 +19,12 @@ int main(int argc, char *argv[]){
     strcat(recebido," ");
     strcat(recebido,argv[2]);
     strcat(recebido,"?");
-    printf("string: %s\ntamanho: %ld\n",recebido,strlen(recebido)); // debug
     write(fd,recebido,strlen(recebido)+1);
     free(recebido);
   }else if(argc==2){
     char *recebido = malloc(100*sizeof(char *));
     strcat(recebido,argv[1]);
     strcat(recebido,"?");
-    printf("string: %s\ntamanho: %ld\n",recebido,strlen(recebido)); // debug
     write(fd,recebido,strlen(recebido)+1);
     free(recebido);
   }else{//executa este se for feita manualmente sem argumentos

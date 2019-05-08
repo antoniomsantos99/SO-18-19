@@ -1,11 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <ctype.h>
+#include <fcntl.h> // O_RDONLY, OCREAT
+#include <unistd.h> // read write
+#include <ctype.h> // isdigit
 
 #define BUFFER_PATH 20
 #define BUFFER_SIZE 1000

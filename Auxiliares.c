@@ -2,8 +2,7 @@
 #include <unistd.h> // read write
 #include <ctype.h> // isdigit
 
-#define BUFFER_PATH 20
-#define BUFFER_SIZE 1000
+#include "headers/Auxiliares.h"
 
 /*Retorna o numero de linhas no ficheiro*/
 int countLines(char path[BUFFER_PATH]) {

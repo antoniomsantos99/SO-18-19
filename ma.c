@@ -10,9 +10,6 @@
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
-#define BUFFER_PATH 100
-#define BUFFER_SIZE 1000
-
 int addString(char input[BUFFER_SIZE],int preco){
 
   int fPtr, fPtrArt;

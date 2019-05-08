@@ -150,7 +150,7 @@ int main(){
     read(0, input, 100);
     if(input[0] == 'a') agregador();
 
-    if (contaPal(input)>2){
+    else if (contaPal(input)>2){
       sscanf(input, "%c %s %s", &arg1, arg2, arg3);
       if(arg1=='i' && myisnumber(arg3)){
         addString(arg2,atoi(arg3));

@@ -10,12 +10,14 @@
 #define MAX_STOCKS 100
 
 int main(){
+  //contar as linhas do ficheiro para saber em quais pode adicioanr stock
   int maxLinha = countLines("ficheirosTexto/Artigos.txt");
   pid_t pid;
   //cria os forks
   for(int i = 0; i < NR_EXECS; i++){
     pid = fork();
     if(pid == 0){
+      //randomizar seed
       srand(time(NULL) ^ (getpid()<<16));
       int linha = 1+rand()%maxLinha;
 
@@ -34,7 +36,9 @@ int main(){
       execvp (args[0],args);
       _exit(0);
     }else{
+      //espera que o filho acabe para criar novo filho e executar o programa de novo
       wait(NULL);
+      //espera um pouco para não dar overload ao pipe
       sleep(0.1);
     }
   }

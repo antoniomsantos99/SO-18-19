@@ -50,7 +50,7 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
   int temPos,tempsize,preco;
 
   if(codigo > countLines("ficheirosTexto/Artigos.txt")){
-    write(1,"Codigo invalido!\n",18);
+    write(1,"Codigo invalido!\n",strlen("Codigo invalido!\n")+1);
     return -1;
   }
 
@@ -88,7 +88,7 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
   remove("ficheirosTexto/Artigos.txt");
   rename("ficheirosTexto/temp.txt", "ficheirosTexto/Artigos.txt");
 
-  write(1, "Nome mudado com Sucesso\n", 25);
+  write(1, "Nome mudado com Sucesso\n", strlen("Nome mudado com Sucesso\n")+1);
   return 0;
 
 }
@@ -101,8 +101,8 @@ int mudaPreco(int codigo, int preco){
 
 
   if(codigo > countLines("ficheirosTexto/Artigos.txt")){
-    write(1,"Codigo invalido!\n",18);
-    return -1;
+    write(1,"Codigo invalido!\n",strlen("Codigo invalido!\n")+1);
+    return 1;
   }
 
   /*Abre os ficheiros necessarios*/
@@ -130,9 +130,9 @@ int mudaPreco(int codigo, int preco){
   close(fptrTemp);
   close(fPtrArt);
   remove("ficheirosTexto/Artigos.txt");
-  rename("ficheirosTexto/temp.txt", "Artigos.txt");
+  rename("ficheirosTexto/temp.txt", "ficheirosTexto/Artigos.txt");
 
-  write(1, "Preco mudado com Sucesso\n", 26);
+  write(1, "Preco mudado com Sucesso\n", strlen("Preco mudado com Sucesso\n")+1);
   return 0;
 
 }
@@ -169,9 +169,9 @@ int main(){
         sscanf(input, "%c %s %s", &arg1, arg2, arg3);
         mudaPreco(atoi(arg2),atoi(arg3));
       }
-      else write(1,"Formato errado!\n",16+1);
+      else write(1,"Formato errado!\n",strlen("Formato errado!\n")+1);
     }
-    else write(1,"Formato errado!\n",16+1);
+    else write(1,"Formato errado!\n",strlen("Formato errado!\n")+1);
   }
   return 0;
 }

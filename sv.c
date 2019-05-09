@@ -36,7 +36,7 @@ int checkArt(int codigo){
       sprintf(newLine,"Stock: %s  Preço: %d\n",tempLine,preco);
       write(fPtrCliente,newLine,strlen(newLine)+1);
     }//printf("%d %s\n",preco,tempLine);
-  }else write(fPtrCliente,"Erro: Artigo não existe.\n",25);
+  }else write(fPtrCliente,"Erro: Artigo não existe.\n",strlen("Erro: Artigo não existe.\n")+1);
 
   close(fPtrArt);
   close(fPtrStock);
@@ -74,7 +74,7 @@ int atualizaStock(int codigo, char stocks[]){
 
       write(fdStock,stocks,strlen(stocks));
       write(fdStock,"\n",1);
-      write(fPtrCliente,"Stock criado com sucesso.\n",26);
+      write(fPtrCliente,"Stock criado com sucesso.\n",strlen("Stock criado com sucesso.\n")+1);
     } else{
       int fdTemp  = open("ficheirosTexto/replace.tmp", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
       int i = 1;
@@ -88,11 +88,11 @@ int atualizaStock(int codigo, char stocks[]){
 
       if(strlen(tempLine)==1) stocktotal = atoi(stocks);
       else stocktotal = atoi(stocks)+atoi(tempLine);
-      if(stocktotal<0) write(fPtrCliente,"Stock não pode ser negativo!\n",30);
+      if(stocktotal<0) write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
       else{
       sprintf(newLine,"%d\n",stocktotal);
       write(fdTemp,newLine,strlen(newLine));
-      
+
       if(atoi(stocks)<0){
       lseek(fdVendas,-1, SEEK_END);
       write(fdVendas,newLineV,strlen(newLineV));
@@ -104,7 +104,7 @@ int atualizaStock(int codigo, char stocks[]){
 
       remove("ficheirosTexto/Stocks.txt");
       rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
-      write(fPtrCliente,"Stock adicionado com sucesso.\n",30);
+      write(fPtrCliente,"Stock adicionado com sucesso.\n",strlen("Stock adicionado com sucesso.\n")+1);
     }
     close(fdTemp);
   }

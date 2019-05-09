@@ -28,5 +28,3 @@ clean:
 	rm -f cv
 	rm -f ag
 	rm -f casosTestes
-	rm -f ServerCall
-	rm -f ClientCall

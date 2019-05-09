@@ -57,6 +57,7 @@ int agregador(){
       }
     }
   }
+  write(1,"Agregador executado com successo!\n",strlen("Agregador executado com successo!\n")+1);
   return 0;
 
 }

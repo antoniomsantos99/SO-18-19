@@ -6,7 +6,7 @@
 
 #include "headers/Auxiliares.h" // countLines
 
-#define NR_EXECS 500
+#define NR_EXECS 50
 #define MAX_STOCKS 100
 
 int main(){
@@ -20,7 +20,7 @@ int main(){
       int linha = 1+rand()%maxLinha;
 
       srand(time(NULL) ^ (getpid()<<16));
-      int stock = 1+rand()%MAX_STOCKS;
+      int stock = rand()%MAX_STOCKS-20;
 
 
       //transforma os numeros numa string
@@ -35,7 +35,7 @@ int main(){
       _exit(0);
     }else{
       wait(NULL);
-      sleep(0.01);
+      sleep(0.1);
     }
   }
 }

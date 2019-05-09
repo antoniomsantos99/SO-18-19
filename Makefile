@@ -5,7 +5,7 @@ OBJDIR = obj
 OBJ = ma.o Auxiliares.o
 OBJSV = sv.o Auxiliares.o
 OBJCV = cv.o
-OBJTESTES = criaCasosTeste.o
+OBJTESTES = criaCasosTeste.o Auxiliares.o
 OBJAG = ag.o Auxiliares.o
 
 %.o: %.c $(HEADERS)

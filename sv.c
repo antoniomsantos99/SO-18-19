@@ -123,7 +123,6 @@ void caller(char cmd[]){
   char arg2[100];
 
   sscanf(cmd,"%d %s",&arg1,arg2);
-  printf("%d %s\n",arg1,arg2);
   if(contaPal(cmd) == 1) checkArt(arg1);
   if(contaPal(cmd) == 2) atualizaStock(arg1,arg2);
 }
@@ -138,15 +137,8 @@ int main(){
     fd1 = open("ServerCall",O_RDONLY);
     char *msg = malloc(100*sizeof(char *));
     read(fd1, msg, sizeof(msg));
+    caller(msg);
 
-    char *token = malloc(100*sizeof(char *));
-    token = strtok(msg,"?");
-
-    while(token!=NULL){
-      token=strtok(NULL,"?");
-      caller(msg);
-
-    }
     free(msg);
     close(fd1);
   }

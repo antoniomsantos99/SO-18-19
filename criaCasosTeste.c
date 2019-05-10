@@ -39,7 +39,7 @@ int main(){
       //espera que o filho acabe para criar novo filho e executar o programa de novo
       wait(NULL);
       //espera um pouco para não dar overload ao pipe
-      sleep(0.1);
+      sleep(0.2);
     }
   }
 }

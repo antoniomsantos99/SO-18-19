@@ -10,8 +10,6 @@
 /* Não usado mas poderá dar jeito no futuro */
 //int gotoLines(int fd,int line);
 
-int addString(char input[BUFFER_SIZE],int preco);
-
 int mudaNome(int codigo, char input[BUFFER_SIZE]);
 
 int mudaPreco(int codigo, int preco);

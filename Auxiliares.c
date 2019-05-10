@@ -1,6 +1,10 @@
-#include <fcntl.h> // O_RDONLY, OCREAT
-#include <unistd.h> // read write
-#include <ctype.h> // isdigit
+#include <stdio.h>
+#include <stdlib.h>//atoi
+#include <string.h>//strlen
+#include <sys/wait.h> // for wait()
+#include <unistd.h>//O_CREAT
+#include <fcntl.h>//read write
+#include <ctype.h>
 
 #include "headers/Auxiliares.h"
 
@@ -60,4 +64,35 @@ int addVer (int a[],int nr){
   }
   a[i]=nr;
   return 1;
+}
+
+int addString(char input[BUFFER_SIZE],int preco,char pathArt[BUFFER_PATH],char pathStr[BUFFER_PATH]){
+
+  int fPtr, fPtrArt;
+  char buffer[BUFFER_SIZE];
+
+  /*Abre os ficheiros necessarios*/
+  fPtr  = open(pathStr, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  fPtrArt  = open(pathArt, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+
+  /*Arranja o primeiro byte do artigo e o seu tamanho*/
+  int pos = lseek(fPtr, -1, SEEK_END) + 1;
+  int size = strlen(input);
+
+  /*Escreve os dados necessários nos ficheiros */
+  write(fPtr, input, strlen(input));
+  sprintf(buffer, "%d %d %d\n", pos, size, preco);
+  write(fPtrArt, buffer, strlen(buffer));
+
+  /*Encontra o codigo para dar ao artigo (linha do artigos.txt)*/
+  lseek(fPtrArt, 0, SEEK_SET);
+  int lines = countLines(pathArt);
+  sprintf(buffer, "Artigo criado com sucesso! Codigo = %d\n",lines);
+  write(1, buffer, strlen(buffer));
+
+  /*Fecha os ficheiros*/
+  close(fPtr);
+  close(fPtrArt);
+
+  return 0;
 }

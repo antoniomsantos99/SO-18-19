@@ -22,4 +22,6 @@ void nextLine(int fd);
 /*Adiciona a um array caso não exista, return 1 se colocou, 0 se não*/
 int addVer (int a[],int nr);
 
+int addString(char input[BUFFER_SIZE],int preco,char pathArt[BUFFER_PATH],char pathStr[BUFFER_PATH]);
+
 #endif

@@ -45,12 +45,15 @@ int checkArt(int codigo){
   return 0;
 }
 
-int atualizaStock(int codigo, char stocks[]){
+int atualizaStock(int codigo, int stocksN){
   int fdStock = open("ficheirosTexto/Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdVendas = open("ficheirosTexto/Vendas.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   char ch,tempLine[BUFFER_SIZE],newLine[BUFFER_SIZE],newLineV[BUFFER_SIZE];
   int bit,len,preco,k=0,counter=1,stocktotal;
+  char stocks[100];
+
+  sprintf(stocks,"%d",stocksN);
 
   int fPtrCliente = open("ClientCall",O_WRONLY);
 
@@ -120,9 +123,9 @@ int atualizaStock(int codigo, char stocks[]){
 //MUDEI DE INT PARA VOID PQ TAVA A DAR ERRO
 void caller(char cmd[]){
   int arg1;
-  char arg2[100];
+  int arg2;
 
-  sscanf(cmd,"%d %s",&arg1,arg2);
+  sscanf(cmd,"%d %d",&arg1,&arg2);
   if(contaPal(cmd) == 1) checkArt(arg1);
   if(contaPal(cmd) == 2) atualizaStock(arg1,arg2);
 }

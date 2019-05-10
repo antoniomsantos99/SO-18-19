@@ -7,41 +7,10 @@
 
 #include "headers/Auxiliares.h"
 #include "headers/ma.h"
-#include "headers/ag.h"//agregador()
+#include "headers/ag.h"
+#include "compactador.c"//agregador()
 
 #pragma GCC diagnostic ignored "-Wunused-result"
-
-int addString(char input[BUFFER_SIZE],int preco){
-
-  int fPtr, fPtrArt;
-  char path[BUFFER_PATH] = "ficheirosTexto/Strings.txt";
-  char buffer[BUFFER_SIZE];
-
-  /*Abre os ficheiros necessarios*/
-  fPtr  = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-  fPtrArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
-
-  /*Arranja o primeiro byte do artigo e o seu tamanho*/
-  int pos = lseek(fPtr, -1, SEEK_END) + 1;
-  int size = strlen(input);
-
-  /*Escreve os dados necessários nos ficheiros */
-  write(fPtr, input, strlen(input));
-  sprintf(buffer, "%d %d %d\n", pos, size, preco);
-  write(fPtrArt, buffer, strlen(buffer));
-
-  /*Encontra o codigo para dar ao artigo (linha do artigos.txt)*/
-  lseek(fPtrArt, 0, SEEK_SET);
-  int lines = countLines("ficheirosTexto/Artigos.txt");
-  sprintf(buffer, "Artigo criado com sucesso! Codigo = %d\n",lines);
-  write(1, buffer, strlen(buffer));
-
-  /*Fecha os ficheiros*/
-  close(fPtr);
-  close(fPtrArt);
-
-  return 0;
-}
 
 int mudaNome(int codigo, char input[BUFFER_SIZE]){
   int fPtr, fPtrArt,fptrTemp,i=1,k=0;
@@ -89,6 +58,11 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
   rename("ficheirosTexto/temp.txt", "ficheirosTexto/Artigos.txt");
 
   write(1, "Nome mudado com Sucesso\n", strlen("Nome mudado com Sucesso\n")+1);
+  if(checkthespacito()<0.8){
+    write(1,"Buede Lixo Mano! Compactando!\n",30);
+    Compress();
+  }
+
   return 0;
 
 }
@@ -159,7 +133,7 @@ int main(){
     }else if (contaPal(input)>2){
       sscanf(input, "%c %s %s", &arg1, arg2, arg3);
       if(arg1=='i' && myisnumber(arg3)){
-        addString(arg2,atoi(arg3));
+        addString(arg2,atoi(arg3),"ficheirosTexto/Artigos.txt","ficheirosTexto/Strings.txt");
       } //comando i para introduzir novo produto
       else if(arg1=='n' && myisnumber(arg2)){
         sscanf(input, "%c %s %s", &arg1, arg2, arg3);

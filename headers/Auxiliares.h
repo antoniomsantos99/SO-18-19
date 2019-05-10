@@ -24,4 +24,6 @@ int addVer (int a[],int nr);
 
 int addString(char input[BUFFER_SIZE],int preco,char pathArt[BUFFER_PATH],char pathStr[BUFFER_PATH]);
 
+int transpose(int linhaI,int linhaF,char pathI[],char pathF[]);
+
 #endif

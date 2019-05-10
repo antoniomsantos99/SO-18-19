@@ -1,12 +1,6 @@
-#include <stdio.h> // sprintf
-#include <unistd.h> // systemcalls
-#include <fcntl.h> // O_CREAT, O_RDWR
-#include <time.h> // time
-#include <string.h> // strings
+#include "Auxiliares.c"
+#include <time.h>
 
-#include "headers/Auxiliares.h"
-
-#pragma GCC diagnostic ignored "-Wunused-result"
 
 int agregador(char path[]){
   int Arrsize = countLines("ficheirosTexto/Artigos.txt");
@@ -64,9 +58,8 @@ int agregador(char path[]){
 
 }
 
-
-
 int main(){
-  agregador("ficheirosTexto/Vendas.txt");
-  return 0;
+    transpose(3,22,"ficheirosTexto/Vendas.txt","ficheirosTexto/teste.txt");
+    agregador("ficheirosTexto/teste.txt");
+    return 0;    
 }

@@ -15,6 +15,7 @@ int countLines(char path[BUFFER_PATH]) {
   int fd = open(path,O_RDONLY);
   while(read(fd, &buffer, 1)!=0)
   if(buffer == '\n') counter++;
+  close(fd);
   return counter;
 }
 
@@ -94,5 +95,26 @@ int addString(char input[BUFFER_SIZE],int preco,char pathArt[BUFFER_PATH],char p
   close(fPtr);
   close(fPtrArt);
 
+  return 0;
+}
+
+int transpose(int linhaI,int linhaF,char pathI[],char pathF[]){
+  int fdI = open(pathI, O_RDONLY | O_APPEND, S_IRUSR | S_IWUSR);
+  int fdF = open(pathF, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+  char ch;
+  if(countLines(pathI) < linhaI){
+    write(1,"Linha Invalida!\n",16);
+    close(fdI);
+    close(fdF);
+    return -1;
+  }
+  
+  gotoLines(fdI,linhaI);
+  while(read(fdI,&ch,1)!=0 && linhaI <= linhaF){
+    if(ch == '\n') linhaI++;
+    write(fdF,&ch,1);
+  }
+  close(fdI);
+  close(fdF);
   return 0;
 }

@@ -8,6 +8,8 @@
 
 #include "headers/Auxiliares.h"
 
+#pragma GCC diagnostic ignored "-Wunused-result"
+
 /*Retorna o numero de linhas no ficheiro*/
 int countLines(char path[BUFFER_PATH]) {
   int counter=0;
@@ -108,7 +110,7 @@ int transpose(int linhaI,int linhaF,char pathI[],char pathF[]){
     close(fdF);
     return -1;
   }
-  
+
   gotoLines(fdI,linhaI);
   while(read(fdI,&ch,1)!=0 && linhaI <= linhaF){
     if(ch == '\n') linhaI++;

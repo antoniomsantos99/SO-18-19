@@ -7,6 +7,8 @@
 #include <math.h>
 #include "headers/Auxiliares.h"
 
+#pragma GCC diagnostic ignored "-Wunused-result"
+
 double checkthespacito(){
     int fdart = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int fdstr = open("ficheirosTexto/Strings.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
@@ -15,7 +17,7 @@ double checkthespacito(){
     double percent;
     char ch,tempLine[100];
 
-    while(read(fdart , &ch, 1)!=0) 
+    while(read(fdart , &ch, 1)!=0)
     if(ch != '\n') tempLine[k++] = ch;
     else {
         tempLine[k] = '\0';
@@ -23,11 +25,11 @@ double checkthespacito(){
         sscanf(tempLine,"%d %d %d",&bit, &len, &preco);
         bitsUsados += len;
     }
-    
-    percent = ((double) bitsUsados/(double) bitstotais);
-    
 
-    
+    percent = ((double) bitsUsados/(double) bitstotais);
+
+
+
 return percent;
 
 }
@@ -38,7 +40,7 @@ int Compress(){
     int k=0,bit,len,preco,i;
     char tempLine[100],ch;
 
-    while(read(fdart , &ch, 1)!=0) 
+    while(read(fdart , &ch, 1)!=0)
     if(ch != '\n') tempLine[k++] = ch;
     else {
         tempLine[k] = '\0';
@@ -58,6 +60,6 @@ int Compress(){
      remove("ficheirosTexto/Strings.txt");
      rename("ficheirosTexto/NewArtigos.txt","ficheirosTexto/Artigos.txt");
      rename("ficheirosTexto/NewStrings.txt","ficheirosTexto/Strings.txt");
-     
+
      return 0;
 }

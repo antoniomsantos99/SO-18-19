@@ -6,7 +6,7 @@
 
 #include "headers/Auxiliares.h" // countLines
 
-#define NR_EXECS 50
+#define NR_EXECS 100
 #define MAX_STOCKS 100
 
 int main(){
@@ -38,8 +38,8 @@ int main(){
     }else{
       //espera que o filho acabe para criar novo filho e executar o programa de novo
       wait(NULL);
-      //espera um pouco para não dar overload ao pipe
-      sleep(0.2);
+      //espera um pouco para não dar overload ao pipe (0.1 segundos)
+      usleep(50000);
     }
   }
 }

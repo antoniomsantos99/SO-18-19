@@ -20,7 +20,7 @@ int checkArt(int codigo){
 
   int fPtrCliente = open("ClientCall",O_WRONLY);
 
-  if(newfd!=-1 && newfd1!=-1){
+  if(newfd!=-1 && newfd1!=-1 && codigo < countLines("ficheirosTexto/Artigos.txt")-1){
     /*Saca o preço*/
     while(read(newfd , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
     tempLine[k] = '\0';
@@ -68,18 +68,28 @@ int atualizaStock(int codigo, int stocksN){
 
     /*Atualiza o stock*/
     /*Se o código for maior que o nrº de linhas do ficheiro dá append das linhas necessárias e acrescenta o stock*/
-    if(countLines("ficheirosTexto/Stocks.txt")<codigo){
+    if(countLines("ficheirosTexto/Artigos.txt")<codigo){
       while(read(fdStock, &ch, 1)!=0 && counter != codigo) if(ch == '\n') counter++;
       while(counter < codigo){
         write(fdStock,"\n",1);
         counter++;
       }
-
+      if(stocksN>0){
       write(fdStock,stocks,strlen(stocks));
       write(fdStock,"\n",1);
       write(fPtrCliente,"Stock criado com sucesso.\n",strlen("Stock criado com sucesso.\n")+1);
+      }
+      else { 
+      write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
+      close(fdStock);
+      close(fdArt);
+      close(fdVendas);
+      close(fPtrCliente);
+      return -1;
+      }
+
     } else{
-      int fdTemp  = open("ficheirosTexto/replace.tmp", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+      int fdTemp  = open("ficheirosTexto/replace.tmp", O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
       int i = 1;
       k=0;
       while(read(fdStock, &ch, 1)!=0 && codigo >=i){
@@ -91,12 +101,21 @@ int atualizaStock(int codigo, int stocksN){
 
       if(strlen(tempLine)==1) stocktotal = atoi(stocks);
       else stocktotal = atoi(stocks)+atoi(tempLine);
-      if(stocktotal<0) write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
+      if(stocktotal<0){ 
+      write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
+      close(fdStock);
+      close(fdArt);
+      close(fdVendas);
+      close(fdTemp);
+      close(fPtrCliente);
+      return -1;
+      }
+      
       else{
       sprintf(newLine,"%d\n",stocktotal);
       write(fdTemp,newLine,strlen(newLine));
 
-      if(atoi(stocks)<0){
+      if(atoi(stocks)<0 && stocktotal>0){
       lseek(fdVendas,-1, SEEK_END);
       write(fdVendas,newLineV,strlen(newLineV));
       }

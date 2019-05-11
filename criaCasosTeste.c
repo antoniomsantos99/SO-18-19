@@ -8,6 +8,7 @@
 
 #define NR_EXECS 100
 #define MAX_STOCKS 100
+#define MIN_STOCKS -20
 
 int main(int argc, char *argv[]){
   //contar as linhas do ficheiro para saber em quais pode adicioanr stock
@@ -23,7 +24,7 @@ int main(int argc, char *argv[]){
         int linha = 1+rand()%maxLinha;
 
         srand(time(NULL) ^ (getpid()<<16));
-        int stock = rand()%MAX_STOCKS-20;
+        int stock = (rand()%MAX_STOCKS)+MIN_STOCKS;
 
 
         //transforma os numeros numa string
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]){
         int linha = 1+rand()%maxLinha;
 
         srand(time(NULL) ^ (getpid()<<16));
-        int stock = rand()%MAX_STOCKS-20;
+        int stock = (rand()%MAX_STOCKS)+MIN_STOCKS;
 
 
         //transforma os numeros numa string

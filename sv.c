@@ -108,7 +108,7 @@ int atualizaStock(int codigo, int stocksN){
       remove("ficheirosTexto/Stocks.txt");
       rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
       if(stocksN>0) write(fPtrCliente,"Stock adicionado com sucesso.\n",strlen("Stock adicionado com sucesso.\n")+1);
-      else write(fPtrCliente,"Venda adicionada com sucesso.\n",strlen("Venda adicionada com sucesso.\n")+1);
+      else write(fPtrCliente,"Venda feita com sucesso.\n",strlen("Venda feita com sucesso.\n")+1);
     }
     close(fdTemp);
   }

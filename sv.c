@@ -76,17 +76,17 @@ int atualizaStock(int codigo, long int stocksN){
         counter++;
       }
       if(stocksN>0){
-      write(fdStock,stocks,strlen(stocks));
-      write(fdStock,"\n",1);
-      write(fPtrCliente,"Stock criado com sucesso.\n",strlen("Stock criado com sucesso.\n")+1);
+        write(fdStock,stocks,strlen(stocks));
+        write(fdStock,"\n",1);
+        write(fPtrCliente,"Stock criado com sucesso.\n",strlen("Stock criado com sucesso.\n")+1);
       }
-      else { 
-      write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
-      close(fdStock);
-      close(fdArt);
-      close(fdVendas);
-      close(fPtrCliente);
-      return -1;
+      else {
+        write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
+        close(fdStock);
+        close(fdArt);
+        close(fdVendas);
+        close(fPtrCliente);
+        return -1;
       }
 
     } else{
@@ -102,36 +102,36 @@ int atualizaStock(int codigo, long int stocksN){
 
       if(strlen(tempLine)==1) stocktotal = atoi(stocks);
       else stocktotal = atoi(stocks)+atoi(tempLine);
-      if(stocktotal<0){ 
-      write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
-      close(fdStock);
-      close(fdArt);
-      close(fdVendas);
-      close(fdTemp);
-      close(fPtrCliente);
-      return -1;
+      if(stocktotal<0){
+        write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
+        close(fdStock);
+        close(fdArt);
+        close(fdVendas);
+        close(fdTemp);
+        close(fPtrCliente);
+        return -1;
       }
-      
+
       else{
-      sprintf(newLine,"%ld\n",stocktotal);
-      write(fdTemp,newLine,strlen(newLine));
+        sprintf(newLine,"%ld\n",stocktotal);
+        write(fdTemp,newLine,strlen(newLine));
 
-      if(atoi(stocks)<0 && stocktotal>0){
-      lseek(fdVendas,-1, SEEK_END);
-      write(fdVendas,newLineV,strlen(newLineV));
+        if(atoi(stocks)<0 && stocktotal>0){
+          lseek(fdVendas,-1, SEEK_END);
+          write(fdVendas,newLineV,strlen(newLineV));
+        }
+
+
+        lseek(fdStock,-1,SEEK_CUR);
+        while(read(fdStock, &ch, 1)!=0) write(fdTemp, &ch, 1);
+
+        remove("ficheirosTexto/Stocks.txt");
+        rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
+        if(stocksN>0) write(fPtrCliente,"Stock adicionado com sucesso.\n",strlen("Stock adicionado com sucesso.\n")+1);
+        else write(fPtrCliente,"Venda feita com sucesso.\n",strlen("Venda feita com sucesso.\n")+1);
       }
-
-
-      lseek(fdStock,-1,SEEK_CUR);
-      while(read(fdStock, &ch, 1)!=0) write(fdTemp, &ch, 1);
-
-      remove("ficheirosTexto/Stocks.txt");
-      rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
-      if(stocksN>0) write(fPtrCliente,"Stock adicionado com sucesso.\n",strlen("Stock adicionado com sucesso.\n")+1);
-      else write(fPtrCliente,"Venda feita com sucesso.\n",strlen("Venda feita com sucesso.\n")+1);
+      close(fdTemp);
     }
-    close(fdTemp);
-  }
   }else write(fPtrCliente,"Erro: Artigo não existe.\n",strlen("Erro: Artigo não existe.\n")+1);
 
   close(fdStock);
@@ -141,15 +141,15 @@ int atualizaStock(int codigo, long int stocksN){
   close(fPtrCliente);
   return 0;
 }
-//MUDEI DE INT PARA VOID PQ TAVA A DAR ERRO
-void caller(char cmd[]){
+//função que escolhe qual das opçoes executar, verificar stock ou adicionar sotck/fazer venda
+void caller(char *cmd){
   int arg1;
   long int arg2;
 
   sscanf(cmd,"%d %ld",&arg1,&arg2);
   printf("1: %d | 2: %ld \n",arg1,arg2);
   if(contaPal(cmd) == 1) checkArt(arg1);
-  if(contaPal(cmd) == 2) atualizaStock(arg1,arg2);
+  if(contaPal(cmd) >= 2) atualizaStock(arg1,arg2);
 }
 
 int main(){

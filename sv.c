@@ -20,7 +20,7 @@ int checkArt(int codigo){
 
   int fPtrCliente = open("ClientCall",O_WRONLY);
 
-  if(newfd!=-1 && newfd1!=-1 && codigo < countLines("ficheirosTexto/Artigos.txt")-1){
+  if(newfd!=-1 && newfd1!=-1 && codigo <= countLines("ficheirosTexto/Artigos.txt")){
     /*Saca o preço*/
     while(read(newfd , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
     tempLine[k] = '\0';
@@ -45,15 +45,16 @@ int checkArt(int codigo){
   return 0;
 }
 
-int atualizaStock(int codigo, int stocksN){
+int atualizaStock(int codigo, long int stocksN){
   int fdStock = open("ficheirosTexto/Stocks.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdVendas = open("ficheirosTexto/Vendas.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdArt  = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   char ch,tempLine[BUFFER_SIZE],newLine[BUFFER_SIZE],newLineV[BUFFER_SIZE];
-  int bit,len,preco,k=0,counter=1,stocktotal;
+  int bit,len,preco,k=0,counter=1;
+  long int stocktotal;
   char stocks[100];
 
-  sprintf(stocks,"%d",stocksN);
+  sprintf(stocks,"%ld",stocksN);
 
   int fPtrCliente = open("ClientCall",O_WRONLY);
 
@@ -63,7 +64,7 @@ int atualizaStock(int codigo, int stocksN){
       while(read(fdArt, &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch;
       tempLine[k] = '\0';
       sscanf(tempLine,"%d %d %d",&bit, &len, &preco);
-      sprintf(newLineV,"%d %d %d\n", codigo, -atoi(stocks), -(atoi(stocks)*preco));
+      sprintf(newLineV,"%d %ld %ld\n", codigo, -stocksN, -stocksN*preco);
     }
 
     /*Atualiza o stock*/
@@ -112,7 +113,7 @@ int atualizaStock(int codigo, int stocksN){
       }
       
       else{
-      sprintf(newLine,"%d\n",stocktotal);
+      sprintf(newLine,"%ld\n",stocktotal);
       write(fdTemp,newLine,strlen(newLine));
 
       if(atoi(stocks)<0 && stocktotal>0){
@@ -143,9 +144,10 @@ int atualizaStock(int codigo, int stocksN){
 //MUDEI DE INT PARA VOID PQ TAVA A DAR ERRO
 void caller(char cmd[]){
   int arg1;
-  int arg2;
+  long int arg2;
 
-  sscanf(cmd,"%d %d",&arg1,&arg2);
+  sscanf(cmd,"%d %ld",&arg1,&arg2);
+  printf("1: %d | 2: %ld \n",arg1,arg2);
   if(contaPal(cmd) == 1) checkArt(arg1);
   if(contaPal(cmd) == 2) atualizaStock(arg1,arg2);
 }
@@ -159,7 +161,7 @@ int main(){
 
     fd1 = open("ServerCall",O_RDONLY);
     char *msg = malloc(100*sizeof(char *));
-    read(fd1, msg, sizeof(msg));
+    read(fd1, msg, 100);
     caller(msg);
 
     free(msg);

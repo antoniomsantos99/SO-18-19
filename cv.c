@@ -41,6 +41,7 @@ int main(int argc, char *argv[]){
     while(1){//loop infinito para tar sempre a receber input
       msg = malloc(100 * sizeof(char *));
       read(0,msg,100);
+      
       write(fd, msg, strlen(msg)+1);
 
       int fPtrCliente = open("ClientCall",O_RDONLY);

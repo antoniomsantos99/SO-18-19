@@ -4,6 +4,7 @@
 #include <time.h> // time
 #include <string.h> // strings
 #include <math.h>
+
 #include "headers/Auxiliares.h"
 
 #pragma GCC diagnostic ignored "-Wunused-result"
@@ -65,12 +66,13 @@ int agregador(char path[]){
   return 0;
 
 }
-
 int multiag(int power){
-  int i,files=pow(2,power),fd;
+  int i;int j = 0;
+  pid_t pid;
+  int files = pow(2,power);
   int linhaI = 1,linhasP = (countLines("ficheirosTexto/Vendas.txt") / files);
   char name[100];
-  
+
   //transpose(2,10,"ficheirosTexto/Vendas.txt","testainde.txt");
   for(i=0;i<files;i++){
     printf("%d,%d\n",linhaI,linhaI+linhasP);
@@ -78,6 +80,18 @@ int multiag(int power){
     transpose(linhaI,linhaI+linhasP,"ficheirosTexto/Vendas.txt",name);
     linhaI += linhasP;
   }
+  /* o que eu fiz */
+  for(i=1;i<files;i++){
+    pid = fork();
+    if(pid==0){
+      break;
+    }else{
+      j+=1;
+    }
+  }
+  sprintf(name,"ficheirosTexto/gtemp%d.txt",j);
+  agregador(name);//recebe cada um um nome independente dependente entre 0 -> (2^power)-1 neste caso 0 -> 7
+  /* onde acaba o quee u fiz */
   return 0;
 }
 

@@ -1,4 +1,4 @@
-CFLAGS = -IHeaders -Wall -O2 -g
+CFLAGS = -IHeaders -Wall -O2 -g -lm
 HEADERS = ag.h ma.h Auxiliares.h
 CC = gcc
 OBJDIR = obj

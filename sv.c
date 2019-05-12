@@ -68,7 +68,7 @@ int atualizaStock(int codigo, int stocksN){
 
     /*Atualiza o stock*/
     /*Se o código for maior que o nrº de linhas do ficheiro dá append das linhas necessárias e acrescenta o stock*/
-    if(countLines("ficheirosTexto/Artigos.txt")<codigo){
+    if(countLines("ficheirosTexto/Stocks.txt")<codigo){
       while(read(fdStock, &ch, 1)!=0 && counter != codigo) if(ch == '\n') counter++;
       while(counter < codigo){
         write(fdStock,"\n",1);

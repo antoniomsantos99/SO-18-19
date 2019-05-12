@@ -104,6 +104,7 @@ int transpose(int linhaI,int linhaF,char pathI[],char pathF[]){
   int fdI = open(pathI, O_RDONLY | O_APPEND, S_IRUSR | S_IWUSR);
   int fdF = open(pathF, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
   char ch;
+  lseek(fdF,-1,SEEK_END);
   if(countLines(pathI) < linhaI){
     write(1,"Linha Invalida!\n",16);
     close(fdI);
@@ -116,6 +117,7 @@ int transpose(int linhaI,int linhaF,char pathI[],char pathF[]){
     if(ch == '\n') linhaI++;
     write(fdF,&ch,1);
   }
+  write(fdF,"\n",1);
   close(fdI);
   close(fdF);
   return 0;

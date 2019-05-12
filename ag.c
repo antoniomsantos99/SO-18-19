@@ -10,12 +10,12 @@
 #pragma GCC diagnostic ignored "-Wunused-result"
 
 //função principal, excuta o agregador todo apartir desta função, recebe o path onde vai executar o agregador
-int agregador(char path[]){
+int agregador(char path[],int tag){
   int Arrsize = countLines("ficheirosTexto/Artigos.txt");
   int fdVendas = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int fdVendasAux = open(path , O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int arr[Arrsize],bitI=0,k=0;
-  char tempLine[100],ch;
+  char tempLine[100],pathF[100],ch;
   long int quant,total;
   int cod, caux,qaux,taux;
 
@@ -25,8 +25,9 @@ int agregador(char path[]){
   /*Cria o ficheiro onde os dados agregados vão ficar*/
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
-  sprintf(tempLine,"ficheirosTexto/%d-%d-%d|%d:%d:%d.txt\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-  int fdAg  = open(tempLine, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
+  if(tag == -1) sprintf(pathF,"ficheirosTexto/%d-%d-%d|%d:%d:%d.txt\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+  else sprintf(pathF,"ficheirosTexto/gtempAg%d.txt",tag);
+  int fdAg  = open(pathF, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
 
   /*Começa a ler o ficheiro de vendas guardando o byte onde está*/
   while (read(fdVendas,&ch,1)!=0){
@@ -61,6 +62,10 @@ int agregador(char path[]){
     }
   }
   write(1,"Agregador executado com successo!\n",strlen("Agregador executado com successo!\n")+1);
+  if(tag != -1){
+    remove(path);
+    rename(pathF,path);
+  }
   close(fdVendas);
   close(fdVendasAux);
   return 0;
@@ -90,14 +95,21 @@ int multiag(int power){
     }
   }
   sprintf(name,"ficheirosTexto/gtemp%d.txt",j);
-  agregador(name);//recebe cada um um nome independente dependente entre 0 -> (2^power)-1 neste caso 0 -> 7
-  /* onde acaba o quee u fiz */
+  printf("%s\n",name);
+  agregador(name,j);
+  if(j!=0) _exit(0);
+  for(i=0;i<files;i++){
+  sprintf(name,"ficheirosTexto/gtemp%d.txt",i);
+  transpose(1,countLines(name),name,"ficheirosTexto/AgAll.txt");
+  }
+  agregador("ficheirosTexto/AgAll.txt",-1);
+  
   return 0;
 }
 
 
 int main(){//executa o agregador para o ficheiro com as vendas
-  //agregador("ficheirosTexto/Vendas.txt");
+  //agregador("ficheirosTexto/Vendas.txt",-1);
   multiag(3);
   return 0;
 }

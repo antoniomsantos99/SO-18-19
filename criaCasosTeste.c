@@ -6,9 +6,9 @@
 
 #include "headers/Auxiliares.h" // countLines
 
-#define NR_EXECS 100
-#define MAX_STOCKS 100
-#define MIN_STOCKS -20
+#define NR_EXECS 100   //numero de execuções caso não receba argumentos
+#define MAX_STOCKS 100  //numero maximo de stocks (+ min stocks, exemplo, 100 + (-20) Max = 80)
+#define MIN_STOCKS -20 //numero minimo de stocks (negativo para poder ser realizado uma venda)
 
 int main(int argc, char *argv[]){
   //contar as linhas do ficheiro para saber em quais pode adicioanr stock

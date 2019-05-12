@@ -15,19 +15,19 @@ int main(int argc, char *argv[]){
 
   int fd = open("ServerCall",O_WRONLY);
 
-  if(argc==3){//quando recebemos argumetnos da criaCasosTeste.c
-    msg = malloc(100 * sizeof(char *));
+  if(argc==3){//quando recebemos argumetnos da criaCasosTeste.c ou argumentos da consola
+    msg = malloc(100 * sizeof(char *));//alloca espaço para poder criar o que vai enviar para o sv
     strcat(msg,argv[1]);
     strcat(msg," ");
     strcat(msg,argv[2]);
-    write(fd,msg,strlen(msg)+1);
+    write(fd,msg,strlen(msg)+1);//escreve para o serverCall
 
     int fPtrCliente = open("ClientCall",O_RDONLY);
-    read(fPtrCliente,msg,100);
-    write(1,msg,strlen(msg)+1);
+    read(fPtrCliente,msg,100);//le a resposta do ciente call
+    write(1,msg,strlen(msg)+1);//escreve a resposta na consola
 
-    free(msg);
-  }else if(argc==2){
+    free(msg);//liberta a memoria allocoada
+  }else if(argc==2){//igual ao anterior apenas recebe um argumento para verificar o stock
     msg = malloc(100 * sizeof(char *));
     strcat(msg,argv[1]);
     write(fd,msg,strlen(msg)+1);
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 
     free(msg);
   }else{//executa este se for feita manualmente sem argumentos
-    while(1){
+    while(1){//loop infinito para tar sempre a receber input
       msg = malloc(100 * sizeof(char *));
       read(0,msg,100);
       write(fd, msg, strlen(msg)+1);
@@ -50,6 +50,6 @@ int main(int argc, char *argv[]){
       close(fPtrCliente);
       free(msg);
     }
-  }
+  }//fecha o ficheiro
   close(fd);
 }

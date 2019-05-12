@@ -8,6 +8,7 @@
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
+//função principal, excuta o agregador todo apartir desta função, recebe o path onde vai executar o agregador
 int agregador(char path[]){
   int Arrsize = countLines("ficheirosTexto/Artigos.txt");
   int fdVendas = open(path, O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
@@ -66,7 +67,7 @@ int agregador(char path[]){
 
 
 
-int main(){
+int main(){//executa o agregador para o ficheiro com as vendas
   agregador("ficheirosTexto/Vendas.txt");
   return 0;
 }

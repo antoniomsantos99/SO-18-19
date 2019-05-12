@@ -12,6 +12,7 @@
 
 #pragma GCC diagnostic ignored "-Wunused-result"
 
+//função para mudar o nome de um determinado produto
 int mudaNome(int codigo, char input[BUFFER_SIZE]){
   int fPtr, fPtrArt,fptrTemp,i=1,k=0;
   char path[BUFFER_PATH] = "ficheirosTexto/Strings.txt",c;
@@ -62,11 +63,9 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
     write(1,"Buede Lixo Mano! Compactando!\n",30);
     Compress();
   }
-
   return 0;
-
 }
-
+//funçao para mudar o nome de um determinado produto
 int mudaPreco(int codigo, int preco){
   int fPtrArt,fptrTemp,i=1,k=0;
   char c;
@@ -115,11 +114,10 @@ int main(){
   // argumentos para serem utilizados no sscanf
   char input[100];
   char arg1,arg2[100],arg3[100];
-  //char *arg2 = malloc(100*sizeof(char *));
   // loop infinito para tar sempre a pedir novo input (quando ouver input errado dá quits)
   while(1){
     read(0, input, 100);
-    if(input[0] == 'a'){
+    if(input[0] == 'a'){//se o input for a excuta o agregador (faz fork para ser possivel continuar a execução deste programa)
       pid_t pid = fork();
       if(pid==0){
         char *args[] = {"./ag",NULL};
@@ -128,23 +126,22 @@ int main(){
       }else{
         wait(NULL);
       }
-      //agregador();
 
     }else if (contaPal(input)>2){
       sscanf(input, "%c %s %s", &arg1, arg2, arg3);
-      if(arg1=='i' && myisnumber(arg3)){
+      if(arg1=='i' && myisnumber(arg3)){ //adiciona novo produto, primeiro nome, depois preço
         addString(arg2,atoi(arg3),"ficheirosTexto/Artigos.txt","ficheirosTexto/Strings.txt");
-      } //comando i para introduzir novo produto
-      else if(arg1=='n' && myisnumber(arg2)){
+      }
+      else if(arg1=='n' && myisnumber(arg2)){//altera o nome de um produto, primeiro codigo, depois o novo nome
         sscanf(input, "%c %s %s", &arg1, arg2, arg3);
         mudaNome(atoi(arg2),arg3);
       } // comando p muda o preco, primeiro local, depois preco novo
       else if(arg1=='p'&& myisnumber(arg2) && myisnumber(arg3)){
         sscanf(input, "%c %s %s", &arg1, arg2, arg3);
         mudaPreco(atoi(arg2),atoi(arg3));
-      }
+      }//caso input seja diferente de i,n,p dá erro pois n reconhece o comando
       else write(1,"Formato errado!\n",strlen("Formato errado!\n")+1);
-    }
+    }//caso input que recebe seja < que o numero de argumentos necessários
     else write(1,"Formato errado!\n",strlen("Formato errado!\n")+1);
   }
   return 0;

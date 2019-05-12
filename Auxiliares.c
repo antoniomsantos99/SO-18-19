@@ -112,7 +112,7 @@ int transpose(int linhaI,int linhaF,char pathI[],char pathF[]){
   }
 
   gotoLines(fdI,linhaI);
-  while(read(fdI,&ch,1)!=0 && linhaI <= linhaF){
+  while(read(fdI,&ch,1)!=0 && linhaI < linhaF){
     if(ch == '\n') linhaI++;
     write(fdF,&ch,1);
   }

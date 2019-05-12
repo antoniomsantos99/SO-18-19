@@ -3,7 +3,7 @@
 #include <fcntl.h> // O_CREAT, O_RDWR
 #include <time.h> // time
 #include <string.h> // strings
-
+#include <math.h>
 #include "headers/Auxiliares.h"
 
 #pragma GCC diagnostic ignored "-Wunused-result"
@@ -15,7 +15,8 @@ int agregador(char path[]){
   int fdVendasAux = open(path , O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
   int arr[Arrsize],bitI=0,k=0;
   char tempLine[100],ch;
-  int cod, quant,total,caux,qaux,taux;
+  long int quant,total;
+  int cod, caux,qaux,taux;
 
   /*Esvazia o array por segurança*/
   memset(arr, 0, sizeof arr);
@@ -34,7 +35,7 @@ int agregador(char path[]){
     /* Caso encontre o fim de uma linha guarda as variaveis para comparar*/
     if(ch=='\n'){
       tempLine[k]='\0';
-      sscanf(tempLine, "%d %d %d", &cod, &quant, &total);
+      sscanf(tempLine, "%d %ld %ld", &cod, &quant, &total);
       k=0;
       if(addVer(arr,cod)==1){
         lseek(fdVendasAux,bitI,SEEK_SET);
@@ -53,7 +54,7 @@ int agregador(char path[]){
           }
         }
         /*Escreve os valores agregados no ficheiro */
-        sprintf(tempLine,"%d %d %d\n",cod,quant,total);
+        sprintf(tempLine,"%d %ld %ld\n",cod,quant,total);
         write(fdAg,tempLine,strlen(tempLine));
       }
     }
@@ -65,9 +66,24 @@ int agregador(char path[]){
 
 }
 
+int multiag(int power){
+  int i,files=pow(2,power),fd;
+  int linhaI = 1,linhasP = (countLines("ficheirosTexto/Vendas.txt") / files);
+  char name[100];
+  
+  //transpose(2,10,"ficheirosTexto/Vendas.txt","testainde.txt");
+  for(i=0;i<files;i++){
+    printf("%d,%d\n",linhaI,linhaI+linhasP);
+    sprintf(name,"ficheirosTexto/gtemp%d.txt",i);
+    transpose(linhaI,linhaI+linhasP,"ficheirosTexto/Vendas.txt",name);
+    linhaI += linhasP;
+  }
+  return 0;
+}
 
 
 int main(){//executa o agregador para o ficheiro com as vendas
-  agregador("ficheirosTexto/Vendas.txt");
+  //agregador("ficheirosTexto/Vendas.txt");
+  multiag(3);
   return 0;
 }

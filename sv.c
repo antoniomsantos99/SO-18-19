@@ -20,7 +20,7 @@ int checkArt(int codigo){
 
   int fPtrCliente = open("ClientCall",O_WRONLY);
 
-  if(newfd!=-1 && newfd1!=-1 && codigo <= countLines("ficheirosTexto/Artigos.txt")){
+  if(codigo <= countLines("ficheirosTexto/Artigos.txt")){
     /*Saca o preço*/
     while(read(newfd , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
     tempLine[k] = '\0';
@@ -30,12 +30,14 @@ int checkArt(int codigo){
     while(read(newfd1 , &ch, 1)!=0 && ch != '\n') tempLine[k++] = ch; //TODO
     tempLine[k] = '\0';
     if(strlen(tempLine)==0) {
-      write(fPtrCliente,"Artigo sem stock.\n",strlen("Artigo sem stock.\n")+1);
+      char newLine[100];
+      sprintf(newLine,"Stock: 0  Preço: %d\n",preco);
+      write(fPtrCliente,newLine,strlen(newLine)+1);
     }else{
       char newLine[100];
       sprintf(newLine,"Stock: %s  Preço: %d\n",tempLine,preco);
       write(fPtrCliente,newLine,strlen(newLine)+1);
-    }//printf("%d %s\n",preco,tempLine);
+    }
   }else write(fPtrCliente,"Erro: Artigo não existe.\n",strlen("Erro: Artigo não existe.\n")+1);
 
   close(fPtrArt);
@@ -52,7 +54,7 @@ int atualizaStock(int codigo, long int stocksN){
   char ch,tempLine[BUFFER_SIZE],newLine[BUFFER_SIZE],newLineV[BUFFER_SIZE];
   int bit,len,preco,k=0,counter=1;
   long int stocktotal;
-  char stocks[100];
+  char stocks[100],output[100];
 
   sprintf(stocks,"%ld",stocksN);
 
@@ -78,7 +80,8 @@ int atualizaStock(int codigo, long int stocksN){
       if(stocksN>0){
         write(fdStock,stocks,strlen(stocks));
         write(fdStock,"\n",1);
-        write(fPtrCliente,"Stock criado com sucesso.\n",strlen("Stock criado com sucesso.\n")+1);
+        sprintf(output,"Stock criado com sucesso. Stock = %ld\n",stocksN);
+        write(fPtrCliente,output,strlen(output)+1);
       }
       else {
         write(fPtrCliente,"Stock não pode ser negativo!\n",strlen("Stock não pode ser negativo!\n")+1);
@@ -127,8 +130,14 @@ int atualizaStock(int codigo, long int stocksN){
 
         remove("ficheirosTexto/Stocks.txt");
         rename("ficheirosTexto/replace.tmp", "ficheirosTexto/Stocks.txt");
-        if(stocksN>0) write(fPtrCliente,"Stock adicionado com sucesso.\n",strlen("Stock adicionado com sucesso.\n")+1);
-        else write(fPtrCliente,"Venda feita com sucesso.\n",strlen("Venda feita com sucesso.\n")+1);
+        if(stocksN>0){ 
+          sprintf(output,"Stock adicionado com sucesso. Stock = %ld\n",stocktotal);
+          write(fPtrCliente,output,strlen(output)+1);
+        }
+        else{ 
+           sprintf(output,"Venda feita com sucesso. Stock = %ld\n",stocktotal);
+           write(fPtrCliente,output,strlen(output)+1);
+        }
       }
       close(fdTemp);
     }
@@ -147,7 +156,6 @@ void caller(char *cmd){
   long int arg2;
 
   sscanf(cmd,"%d %ld",&arg1,&arg2);
-  printf("1: %d | 2: %ld \n",arg1,arg2);
   if(contaPal(cmd) == 1) checkArt(arg1);
   if(contaPal(cmd) >= 2) atualizaStock(arg1,arg2);
 }

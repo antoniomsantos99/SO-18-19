@@ -21,7 +21,7 @@ int countLines(char path[BUFFER_PATH]) {
   return counter;
 }
 
-/* Não usado mas poderá dar jeito no futuro */
+/*Vai até certa linha*/
 int gotoLines(int fd,int line) {
   int counter=1;
   if(counter == line) return fd;

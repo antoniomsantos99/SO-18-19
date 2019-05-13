@@ -60,7 +60,7 @@ int mudaNome(int codigo, char input[BUFFER_SIZE]){
 
   write(1, "Nome mudado com Sucesso\n", strlen("Nome mudado com Sucesso\n")+1);
   if(checkthespacito()<0.8){
-    write(1,"Buede Lixo Mano! Compactando!\n",30);
+    write(1,"Muito lixo detetado!! Compactando!\n",30);
     Compress();
   }
   return 0;

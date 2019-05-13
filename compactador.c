@@ -8,7 +8,7 @@
 #include "headers/Auxiliares.h"
 
 #pragma GCC diagnostic ignored "-Wunused-result"
-
+//Calcula o lixo presente no strings.txt
 double checkthespacito(){
     int fdart = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int fdstr = open("ficheirosTexto/Strings.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
@@ -33,7 +33,7 @@ double checkthespacito(){
 return percent;
 
 }
-
+// Comprime os ficheiros do ma
 int Compress(){
     int fdart = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int fdstr = open("ficheirosTexto/Strings.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
@@ -53,7 +53,6 @@ int Compress(){
         }
         tempLine[k] = '\0';
         k=0;
-        printf("%s\n",tempLine);
         addString(tempLine,preco,"ficheirosTexto/NewArtigos.txt","ficheirosTexto/NewStrings.txt");
      }
      remove("ficheirosTexto/Artigos.txt");

@@ -1,3 +1,4 @@
+
 #include <stdio.h> // sprintf
 #include <unistd.h> // systemcalls
 #include <fcntl.h> // O_CREAT, O_RDWR
@@ -17,7 +18,7 @@ int agregador(char path[],int tag){
   int arr[Arrsize],bitI=0,k=0;
   char tempLine[100],pathF[100],ch;
   long int quant,total;
-  int cod, caux,qaux,taux;
+  int cod, caux,qaux,taux,l=0;
 
   /*Esvazia o array por segurança*/
   memset(arr, 0, sizeof arr);
@@ -36,6 +37,7 @@ int agregador(char path[],int tag){
 
     /* Caso encontre o fim de uma linha guarda as variaveis para comparar*/
     if(ch=='\n'){
+      l++;
       tempLine[k]='\0';
       sscanf(tempLine, "%d %ld %ld", &cod, &quant, &total);
       k=0;
@@ -48,7 +50,7 @@ int agregador(char path[],int tag){
           if(ch=='\n'){
             tempLine[k]='\0';
             sscanf(tempLine, "%d %d %d", &caux, &qaux, &taux);
-            if(cod == caux){
+            if(cod == caux && l != countLines(path)){
               quant += qaux;
               total += taux;
             }
@@ -71,19 +73,21 @@ int agregador(char path[],int tag){
   return 0;
 
 }
+
+
 int multiag(int power){
   int i;int j = 0;
   pid_t pid;
   int files = pow(2,power);
-  int linhaI = 1,linhasP = (countLines("ficheirosTexto/Vendas.txt") / files);
+  int linhaI = 1,linhasP = ceil((countLines("ficheirosTexto/Vendas.txt") / files));
   char name[100];
 
   //transpose(2,10,"ficheirosTexto/Vendas.txt","testainde.txt");
   for(i=0;i<files;i++){
-    printf("%d,%d\n",linhaI,linhaI+linhasP);
     sprintf(name,"ficheirosTexto/gtemp%d.txt",i);
-    transpose(linhaI,linhaI+linhasP,"ficheirosTexto/Vendas.txt",name);
-    linhaI += linhasP+1;
+    if(i == files-1) transpose(linhaI,countLines("ficheirosTexto/Vendas.txt")+5,"ficheirosTexto/Vendas.txt",name);
+    else transpose(linhaI,linhaI+linhasP,"ficheirosTexto/Vendas.txt",name);
+    linhaI += linhasP;
   }
   /* o que eu fiz */
   for(i=1;i<files;i++){
@@ -95,12 +99,11 @@ int multiag(int power){
     }
   }
   sprintf(name,"ficheirosTexto/gtemp%d.txt",j);
-  printf("%s\n",name);
   agregador(name,j);
   if(j!=0) _exit(0);
   for(i=0;i<files;i++){
   sprintf(name,"ficheirosTexto/gtemp%d.txt",i);
-  transpose(1,countLines(name),name,"ficheirosTexto/AgAll.txt");
+  transpose(1,countLines(name)+100,name,"ficheirosTexto/AgAll.txt");
   }
   agregador("ficheirosTexto/AgAll.txt",-1);
   
@@ -110,6 +113,6 @@ int multiag(int power){
 
 int main(){//executa o agregador para o ficheiro com as vendas
   agregador("ficheirosTexto/Vendas.txt",-1);
-  //multiag(3);
+  //multiag(2);
   return 0;
 }

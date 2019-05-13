@@ -38,7 +38,7 @@ int Compress(){
     int fdart = open("ficheirosTexto/Artigos.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int fdstr = open("ficheirosTexto/Strings.txt", O_CREAT | O_RDWR | O_APPEND, S_IRUSR | S_IWUSR);
     int k=0,bit,len,preco,i;
-    char tempLine[100],ch;
+    char tempLine[100],newLine[100],ch;
 
     while(read(fdart , &ch, 1)!=0)
     if(ch != '\n') tempLine[k++] = ch;
@@ -53,7 +53,8 @@ int Compress(){
         }
         tempLine[k] = '\0';
         k=0;
-        addString(tempLine,preco,"ficheirosTexto/NewArtigos.txt","ficheirosTexto/NewStrings.txt");
+        if(strcmp(tempLine,newLine)!=0) addString(tempLine,preco,"ficheirosTexto/NewArtigos.txt","ficheirosTexto/NewStrings.txt");
+        strcpy(newLine,tempLine);
      }
      remove("ficheirosTexto/Artigos.txt");
      remove("ficheirosTexto/Strings.txt");

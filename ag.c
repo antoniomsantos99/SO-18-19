@@ -83,7 +83,7 @@ int multiag(int power){
     printf("%d,%d\n",linhaI,linhaI+linhasP);
     sprintf(name,"ficheirosTexto/gtemp%d.txt",i);
     transpose(linhaI,linhaI+linhasP,"ficheirosTexto/Vendas.txt",name);
-    linhaI += linhasP;
+    linhaI += linhasP+1;
   }
   /* o que eu fiz */
   for(i=1;i<files;i++){
@@ -109,7 +109,7 @@ int multiag(int power){
 
 
 int main(){//executa o agregador para o ficheiro com as vendas
-  //agregador("ficheirosTexto/Vendas.txt",-1);
-  multiag(3);
+  agregador("ficheirosTexto/Vendas.txt",-1);
+  //multiag(3);
   return 0;
 }
